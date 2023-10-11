@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://todo.sudofolks.com
+
+# Sitemaps
+Sitemap: https://todo.sudofolks.com/sitemap.xml
