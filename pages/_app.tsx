@@ -1,19 +1,18 @@
 import "tailwindcss/tailwind.css";
 import "../styles/globals.css";
 import "../styles/sudofolks.css";
-import type { AppProps } from "next/app";
 import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import * as gtag from "../lib/gtag";
 import Script from "next/script";
 import { SessionProvider } from "next-auth/react";
-import type { Session } from "next-auth";
+import { AppPropsWithLayout } from "@/utils/constants";
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps<{ session: Session }>) {
+}: AppPropsWithLayout) {
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url: any) => {
@@ -26,6 +25,8 @@ export default function App({
       router.events.off("hashChangeComplete", handleRouteChange);
     };
   }, [router.events]);
+ 
+  const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <>
@@ -50,7 +51,7 @@ export default function App({
       />
       <SessionProvider session={session}>
         <ThemeProvider attribute="class">
-          <Component {...pageProps} />
+          {getLayout(<Component {...pageProps} />)}
         </ThemeProvider>
       </SessionProvider>
     </>

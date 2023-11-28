@@ -2,7 +2,8 @@
   "ts-node": {
     // these options are overrides used only by ts-node
     "compilerOptions": {
-      "module": "commonjs"
+      "module": "commonjs",
+      "baseUrl": "."
     }
   },
   "compilerOptions": {
@@ -19,8 +20,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "baseUrl": ".",
+    "incremental": true,
+    "paths": {
+      "@/components/*": ["components/*"],
+      "@/public/*": ["public/*"],
+      "@/utils/*": ["utils/*"],
+      "@/lib/*": ["lib/*"],
+    },
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "lib/prisma.js"],
   "exclude": ["node_modules"]
 }
