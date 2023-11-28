@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import * as gtag from "../lib/gtag";
 import Script from "next/script";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 import { AppPropsWithLayout } from "@/utils/constants";
 
 export default function App({
@@ -25,7 +25,7 @@ export default function App({
       router.events.off("hashChangeComplete", handleRouteChange);
     };
   }, [router.events]);
- 
+  
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
