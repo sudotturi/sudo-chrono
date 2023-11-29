@@ -16,19 +16,38 @@ enum Gender {
   OTHER
 }
 
+enum ROLES {
+  ADMIN
+  USER
+}
+
+enum MODULES {
+  TRACKING
+  DASHBOARD
+  TEAMS
+  PROJECTS
+}
+
 model User {
   id           String @id @default(auto()) @map("_id") @db.ObjectId
   username     String
   email        String @unique
   passwordHash String
-  firstName    String?
-  lastName     String?
+  fullName    String?
   dateOfBirth  DateTime?
   gender       Gender?
   phoneNumber  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  roles ROLES?
   addresses    Address[]
+}
+
+model RoleModules {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  module        MODULES
+  role    ROLES
+  order Int
 }
 
 model Address {
