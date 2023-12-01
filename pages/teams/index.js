@@ -1,7 +1,9 @@
 
-import AddUser from "@/components/addUserModel";
+import AddUser from "@/components/user/addUserModel";
+import DeleteUser from "@/components/user/deleteModel";
 import prisma from "@/lib/prisma";
-import { PlusIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon, LockClosedIcon, LockOpenIcon, PencilSquareIcon, PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import { ROLES } from "@prisma/client";
 import { Checkbox, Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 'flowbite-react';
 import { useEffect, useState } from "react";
 
@@ -10,7 +12,8 @@ export default function Team({ feed }) {
 
 
   const [data, setData] = useState(feed);
-
+  const [mode, setMode] = useState('add');
+  const [ind, setInd] = useState(0);
   const TableHeaderSection = <section>
     <div>
       <div className="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
@@ -47,7 +50,7 @@ export default function Team({ feed }) {
           <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
             <button
               type="button"
-              onClick={() => setAddUserModelOpen(true)}
+              onClick={() => openAddUserModel()}
               className=" uppercase flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
             >
               <PlusIcon className="h-3.5 w-3.5 mr-2" />
@@ -209,21 +212,79 @@ export default function Team({ feed }) {
   const [isAddUserModelOpen, setAddUserModelOpen] = useState(false);
 
   function openAddUserModel() {
-
+    setMode('add');
+    setAddUserModelOpen(true);
   }
+
+  const edit = <>
+    <>
+
+      <div
+        id="dropdownDotsHorizontal"
+        className="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+      >
+        <ul
+          className="py-2 text-sm text-gray-700 dark:text-gray-200"
+          aria-labelledby="dropdownMenuIconHorizontalButton"
+        >
+          <li>
+            <a
+              href="#"
+              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            >
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            >
+              Settings
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            >
+              Earnings
+            </a>
+          </li>
+        </ul>
+        <div className="py-2">
+          <a
+            href="#"
+            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+          >
+            Separated link
+          </a>
+        </div>
+      </div>
+    </>
+  </>
 
   useEffect(() => {
     if (!isAddUserModelOpen) {
-      console.log('sdfsf')
-      console.log(data)
     }
   }, [isAddUserModelOpen])
 
+  function editUser(ind) {
+    setMode('edit');
+    setInd(ind);
+    setAddUserModelOpen(true);
+  }
 
-  return (
-    <div className="overflow-x-auto">
-      {TableHeaderSection}
-      <AddUser isAddUserModelOpen={isAddUserModelOpen} setAddUserModelOpen={setAddUserModelOpen} feed={feed} setData={setData} />
+  function deleteUser(ind) {
+    setMode('delete');
+    setInd(ind);
+    setAddUserModelOpen(true);
+  }
+
+  return (<>
+    {TableHeaderSection}
+    < div className="overflow-x-auto pt-1 md:pt-1" >
+      <AddUser isAddUserModelOpen={isAddUserModelOpen} setAddUserModelOpen={setAddUserModelOpen} data={data} setData={setData} mode={mode} ind={ind} />
       <Table hoverable>
         <TableHead>
           <TableHeadCell>Full Name</TableHeadCell>
@@ -231,13 +292,15 @@ export default function Team({ feed }) {
           <TableHeadCell>Gener</TableHeadCell>
           <TableHeadCell>Phone Number</TableHeadCell>
           <TableHeadCell>Role</TableHeadCell>
+          <TableHeadCell>Active</TableHeadCell>
+          <TableHeadCell>Locked</TableHeadCell>
           <TableHeadCell>
-            <span className="sr-only">Edit</span>
+            <span className="sr-only">Actions</span>
           </TableHeadCell>
         </TableHead>
         <TableBody className="divide-y">
-          {feed.map((user) => {
-            return <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
+          {data.map((user, ind) => {
+            return <TableRow key={ind} className="bg-white dark:border-gray-700 dark:bg-gray-800">
 
               <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                 {user.fullName}
@@ -246,20 +309,29 @@ export default function Team({ feed }) {
               <TableCell>{user.gender}</TableCell>
               <TableCell>{user.phoneNumber ? user.phoneNumber : ' - '}</TableCell>
               <TableCell>{user.roles}</TableCell>
-              <TableCell>
-                <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                  Edit
-                </a>
+              <TableCell>{user.isActive ? <CheckCircleIcon className="h-5 w-5 text-green-500" /> : <XCircleIcon className="h-5 w-5 text-red-500" />}</TableCell>
+              <TableCell>{!user.isLocked ? <LockOpenIcon className="h-5 w-5 text-green-500" /> : <LockClosedIcon className="h-5 w-5 text-red-500" />}</TableCell>
+              {user.roles == ROLES.SUPER_ADMIN ? (<> <TableCell>
+
               </TableCell>
+              </>) : (<> <TableCell>
+                <button onClick={() => editUser(ind)} className="p-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500">
+                  <PencilSquareIcon className="h-5 w-5 text-gray-500" />
+                </button>
+                <button onClick={() => deleteUser(ind)} className="p-2 font-medium text-blue-600 hover:underline dark:text-cyan-500">
+                  <TrashIcon className="h-5 w-5 text-red-500" />
+                </button>
+              </TableCell>
+              </>)}
+
             </TableRow>
           })}
 
         </TableBody>
       </Table>
-    </div>
+    </div >
+  </>
   )
-
-
 }
 
 export const getStaticProps = async () => {
@@ -271,10 +343,14 @@ export const getStaticProps = async () => {
       dateOfBirth: true,
       gender: true,
       phoneNumber: true,
-      roles: true
+      roles: true,
+      isActive: true,
+      isLocked: true
+    },
+    orderBy: {
+      createdAt: 'desc',
     },
   });
-  console.log(feed)
   return {
     props: { feed },
     revalidate: 10,

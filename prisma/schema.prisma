@@ -17,6 +17,7 @@ enum Gender {
 }
 
 enum ROLES {
+  SUPER_ADMIN
   ADMIN
   USER
 }
@@ -30,13 +31,15 @@ enum MODULES {
 
 model User {
   id           String @id @default(auto()) @map("_id") @db.ObjectId
-  username     String
+  username     String @unique
   email        String @unique
   passwordHash String
   fullName    String?
   dateOfBirth  DateTime?
   gender       Gender?
   phoneNumber  String?
+  isActive  Boolean @default(true)
+  isLocked  Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   roles ROLES?

@@ -10,29 +10,66 @@ const userData: Prisma.UserCreateInput[] = [
     passwordHash: '$2a$12$rq6BZ0NNJTcg9Ma.WuTxa.JYgtUYZUg5Ex0NcIkpzpc7n/KL1OPXu', // test
     fullName: 'Super Admin',
     gender: Gender.MALE,
-    roles : ROLES.ADMIN,
+    phoneNumber: '9916367638',
+    roles: ROLES.SUPER_ADMIN,
+    isActive: true,
+    isLocked: false
   }
 ]
 
 const roleModuleData: Prisma.RoleModulesCreateInput[] = [
   {
     module: MODULES.TRACKING,
-    role : ROLES.ADMIN,
+    role: ROLES.ADMIN,
     order: 0
   },
   {
     module: MODULES.DASHBOARD,
-    role : ROLES.ADMIN,
+    role: ROLES.ADMIN,
     order: 1
   },
   {
     module: MODULES.TEAMS,
-    role : ROLES.ADMIN,
+    role: ROLES.ADMIN,
     order: 2
   },
   {
     module: MODULES.PROJECTS,
-    role : ROLES.ADMIN,
+    role: ROLES.ADMIN,
+    order: 3
+  }, {
+    module: MODULES.TRACKING,
+    role: ROLES.SUPER_ADMIN,
+    order: 0
+  },
+  {
+    module: MODULES.DASHBOARD,
+    role: ROLES.SUPER_ADMIN,
+    order: 1
+  },
+  {
+    module: MODULES.TEAMS,
+    role: ROLES.SUPER_ADMIN,
+    order: 2
+  },
+  {
+    module: MODULES.PROJECTS,
+    role: ROLES.SUPER_ADMIN,
+    order: 3
+  },
+  {
+    module: MODULES.TRACKING,
+    role: ROLES.USER,
+    order: 0
+  },
+  {
+    module: MODULES.DASHBOARD,
+    role: ROLES.USER,
+    order: 1
+  },
+  {
+    module: MODULES.PROJECTS,
+    role: ROLES.USER,
     order: 3
   }
 ]
@@ -40,8 +77,8 @@ const roleModuleData: Prisma.RoleModulesCreateInput[] = [
 async function main() {
   console.log(`Start seeding ...`)
   for (const u of userData) {
-    const del = await prisma.user.delete({where: {email:u.email}})
-    console.log("deleting seed user :" + del.id);
+    const del = await prisma.user.deleteMany({ where: { email: u.email } })
+    console.log("deleting seed user");
     const user = await prisma.user.create({
       data: u,
     })
@@ -49,8 +86,8 @@ async function main() {
   }
 
   for (const role of roleModuleData) {
-    // const del = await prisma.roleModules.delete({where: {module: role.module}})
-    // console.log("deleting seed user :" + del.id);
+    const del = await prisma.roleModules.deleteMany({ where: { module: role.module, role: role.role } })
+    console.log("deleting role module user");
     const roleMod = await prisma.roleModules.create({
       data: role,
     })

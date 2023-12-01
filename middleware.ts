@@ -29,9 +29,10 @@ export async function middleware(req: NextRequest) {
     }
     if (session) {
         const { modules }: Array<string> = session;
+        if (modules && modules.length == 0) {
+            return NextResponse.redirect(new URL('/api/auth/signout', req.url))
+        }
 
-        console.log(path.toUpperCase().replace("/", ""))
-        console.log(modules.includes(path.toUpperCase().replace("/", "")))
         if (!(modules && modules.includes(path.toUpperCase().replace("/", "")))) {
             return NextResponse.redirect(new URL('/tracking', req.url))
         }
