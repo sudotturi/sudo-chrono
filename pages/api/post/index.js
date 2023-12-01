@@ -1,14 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/prisma'
-import { getSession } from 'next-auth/react'
-import { Gender, ROLES } from '@prisma/client';
+import { ROLES } from '@prisma/client';
 import { getToken } from 'next-auth/jwt';
 
 
 // POST /api/post
 // Required fields in body: title
 // Optional fields in body: content
-export default async function handle(req: NextApiRequest, res: NextApiResponse) {
+export default async function handle(req, res) {
 
     const session = await getToken({ req });
     if (session) {

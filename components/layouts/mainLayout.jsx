@@ -8,10 +8,9 @@ import { modulesMap } from "@/utils/constants";
 import { ArrowRightOnRectangleIcon, ChartPieIcon, ClipboardDocumentIcon, ClockIcon, MoonIcon, SunIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import { useTheme } from "next-themes";
 import { MODULES } from "@prisma/client";
-type LayoutProps = {
-  children: React.ReactNode
-}
-export default function Layout({ children }: LayoutProps) {
+import Link from "next/link";
+
+export default function Layout({ children }) {
 
   const [isProfileCardOpen, setProfileCardOpen] = useState(false);
 
@@ -32,7 +31,7 @@ export default function Layout({ children }: LayoutProps) {
     } else if (status == 'authenticated') {
       setLoading(false);
     }
-  }, [status]);
+  }, [status, route]);
 
   if (loading)
     return (<Loading />
@@ -44,6 +43,7 @@ export default function Layout({ children }: LayoutProps) {
     else
       setTheme("light");
   };
+
   return (
     <div>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -72,12 +72,12 @@ export default function Layout({ children }: LayoutProps) {
                   />
                 </svg>
               </button>
-              <a href="" className="flex ms-2 md:me-24">
+              <Link href="" className="flex ms-2 md:me-24">
                 <Image alt="Sudo Folks" src={SFBLACKFINAL} width={40} />
                 <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
                   Sudo Chrono
                 </span>
-              </a>
+              </Link>
             </div>
             <div className="flex items-center">
               <div className="flex items-center ms-3">
@@ -90,7 +90,7 @@ export default function Layout({ children }: LayoutProps) {
                     data-dropdown-toggle="dropdown-user"
                   >
                     <span className="sr-only">Open user menu</span>
-                    <img
+                    <Image
                       className="w-8 h-8 rounded-full"
                       src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
                       alt="user photo"
@@ -132,13 +132,13 @@ export default function Layout({ children }: LayoutProps) {
                   </div>
                   <ul className="py-1" role="none">
                     <li>
-                      <a
+                      <Link
                         href="#"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                         role="menuitem"
                       >
                         Dashboard
-                      </a>
+                      </Link>
                     </li>
                     <li>
                       <a
@@ -159,13 +159,13 @@ export default function Layout({ children }: LayoutProps) {
                       </a>
                     </li>
                     <li>
-                      <a
+                      <Link
                         href="/api/auth/signout"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                         role="menuitem"
                       >
                         Sign out
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -182,10 +182,10 @@ export default function Layout({ children }: LayoutProps) {
       >
         <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
           <ul className="space-y-2 font-medium">
-            {data?.user?.modules.map((mod) => {
+            {data?.user?.modules.map((mod, ind) => {
               let name = modulesMap[mod]
-              return (<li>
-                <a
+              return (<li key={ind}>
+                <Link
                   href={mod.toLowerCase()}
                   className={route.pathname != "/" + mod.toLowerCase() ? "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group" : "flex items-center p-2 text-gray-900 rounded-lg dark:text-white bg-gray-100 dark:bg-gray-700 group"}
                 >
@@ -194,7 +194,7 @@ export default function Layout({ children }: LayoutProps) {
                   {mod == MODULES.TEAMS && <UserGroupIcon className="h-5 w-5 text-gray-500" />}
                   {mod == MODULES.PROJECTS && <ClipboardDocumentIcon className="h-5 w-5 text-gray-500" />}
                   <span className="ms-3">{modulesMap[mod].name}</span>
-                </a>
+                </Link>
               </li>)
             })}
 
@@ -298,13 +298,13 @@ export default function Layout({ children }: LayoutProps) {
             </li> */}
             <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
             <li>
-              <a
+              <Link
                 href="/api/auth/signout"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <ArrowRightOnRectangleIcon className="h-5 w-5 text-gray-500" />
                 <span className="flex-1 ms-3 whitespace-nowrap">Sign Out</span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

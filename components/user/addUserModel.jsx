@@ -3,8 +3,7 @@
 
 import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import { Gender, ROLES } from '@prisma/client';
-import { Button, Checkbox, Label, Modal, Spinner, TextInput } from 'flowbite-react';
-import { title } from 'process';
+import { Button, Checkbox, Modal, Spinner, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 
 export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data, setData, mode, ind }) {
@@ -46,7 +45,7 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
             setActive(us.isActive);
             setLocked(us.isLocked);
         }
-    }, [isAddUserModelOpen])
+    }, [isAddUserModelOpen, data, ind, isadd])
 
     const submitData = async () => {
         try {
@@ -73,7 +72,7 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
                 }]);
                 setData(mer);
             } else if (isedit) {
-                let newData: Array<any> = [].concat(data)
+                let newData = [].concat(data)
                 newData[ind] = {
                     email,
                     username,

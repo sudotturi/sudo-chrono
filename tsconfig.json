@@ -52,7 +52,7 @@
     "**/*.tsx",
     "lib/prisma.js",
     ".next/types/**/*.ts"
-, "lib/fetch.ts", "pages/teams/index.js", "components/table.tsx"  ],
+, "lib/fetch.ts", "pages/teams/index.js", "components/table.tsx", "components/layouts/mainLayout.jsx", "components/user/addUserModel.jsx", "components/user/deleteModel.jsx", "middleware.js", "pages/api/post/index.js"  ],
   "exclude": [
     "node_modules"
   ]

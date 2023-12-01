@@ -31,3 +31,8 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 export type AppPropsWithLayout = AppProps<{ session: Session }> & {
   Component: NextPageWithLayout;
 };
+
+
+export type LayoutProps = {
+  children: React.ReactNode
+}

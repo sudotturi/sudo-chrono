@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt';
 export const config = {
     matcher: [
@@ -14,7 +13,7 @@ export const config = {
     ],
 };
 
-export async function middleware(req: NextRequest) {
+export async function middleware(req) {
     const path = req.nextUrl.pathname
     const session = await getToken({ req });
 
@@ -28,7 +27,7 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/tracking', req.url))
     }
     if (session) {
-        const { modules }: Array<string> = session;
+        const { modules } = session;
         if (modules && modules.length == 0) {
             return NextResponse.redirect(new URL('/api/auth/signout', req.url))
         }
