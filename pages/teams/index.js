@@ -1,10 +1,9 @@
 
 import AddUser from "@/components/user/addUserModel";
-import DeleteUser from "@/components/user/deleteModel";
 import prisma from "@/lib/prisma";
-import { CheckCircleIcon, LockClosedIcon, LockOpenIcon, PencilSquareIcon, PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon, LockClosedIcon, LockOpenIcon, PencilSquareIcon, PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { ROLES } from "@prisma/client";
-import { Checkbox, Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 'flowbite-react';
+import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 'flowbite-react';
 import { useEffect, useState } from "react";
 
 

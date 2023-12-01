@@ -17,10 +17,12 @@ interface ModuleItem {
   };
 }
 
-export const modulesMap: ModuleItem = { [MODULES.DASHBOARD]: { "name": "Dashboard", icon: 'Dashboard' }, 
-[MODULES.TEAMS]: { "name": "Team", icon: 'Dashboard' }, 
-[MODULES.PROJECTS]: { "name": "Project", icon: 'Dashboard' }, 
-[MODULES.TRACKING]: { "name": "Tracking", icon: 'Dashboard' } }
+export const modulesMap: ModuleItem = {
+  [MODULES.DASHBOARD]: { "name": "Dashboard", icon: 'Dashboard' },
+  [MODULES.TEAMS]: { "name": "Team", icon: 'Dashboard' },
+  [MODULES.PROJECTS]: { "name": "Projects", icon: 'Dashboard' },
+  [MODULES.TRACKING]: { "name": "Tracking", icon: 'Dashboard' }
+}
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;

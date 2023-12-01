@@ -5,8 +5,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Loading from "../loading";
 import { modulesMap } from "@/utils/constants";
-import { ArrowRightOnRectangleIcon, BeakerIcon, MoonIcon, SunIcon } from '@heroicons/react/24/solid'
+import { ArrowRightOnRectangleIcon, ChartPieIcon, ClipboardDocumentIcon, ClockIcon, MoonIcon, SunIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import { useTheme } from "next-themes";
+import { MODULES } from "@prisma/client";
 type LayoutProps = {
   children: React.ReactNode
 }
@@ -188,7 +189,10 @@ export default function Layout({ children }: LayoutProps) {
                   href={mod.toLowerCase()}
                   className={route.pathname != "/" + mod.toLowerCase() ? "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group" : "flex items-center p-2 text-gray-900 rounded-lg dark:text-white bg-gray-100 dark:bg-gray-700 group"}
                 >
-                  <BeakerIcon className="h-5 w-5 text-gray-500" />
+                  {mod == MODULES.DASHBOARD && <ChartPieIcon className="h-5 w-5 text-gray-500" />}
+                  {mod == MODULES.TRACKING && <ClockIcon className="h-5 w-5 text-gray-500" />}
+                  {mod == MODULES.TEAMS && <UserGroupIcon className="h-5 w-5 text-gray-500" />}
+                  {mod == MODULES.PROJECTS && <ClipboardDocumentIcon className="h-5 w-5 text-gray-500" />}
                   <span className="ms-3">{modulesMap[mod].name}</span>
                 </a>
               </li>)
