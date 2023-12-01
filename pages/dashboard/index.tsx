@@ -31,13 +31,3 @@ export default function Home({}) {
    </div>
   )
 }
-
-
-Home.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <Layout>
-      sfgdfsgdfg
-      {page}
-    </Layout>
-  )
-}

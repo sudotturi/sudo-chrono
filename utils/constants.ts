@@ -17,7 +17,7 @@ interface ModuleItem {
   };
 }
 
-export const modules: ModuleItem = { [MODULES.DASHBOARD]: { "name": "Dashboard", icon: 'Dashboard' }, 
+export const modulesMap: ModuleItem = { [MODULES.DASHBOARD]: { "name": "Dashboard", icon: 'Dashboard' }, 
 [MODULES.TEAMS]: { "name": "Team", icon: 'Dashboard' }, 
 [MODULES.PROJECTS]: { "name": "Project", icon: 'Dashboard' }, 
 [MODULES.TRACKING]: { "name": "Tracking", icon: 'Dashboard' } }

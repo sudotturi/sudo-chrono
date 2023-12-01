@@ -1,6 +1,6 @@
 module.exports = {
   mode: "jit",
-  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  content: [ "./node_modules/flowbite-react/**/*.js",'./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   darkMode: "class", // or 'media' or 'class'
   theme: {
     extend: {
@@ -15,5 +15,5 @@ module.exports = {
   variants: {
     extend: {   animation: ['group-hover'],},
   },
-  plugins: [],
+  plugins: [ require("flowbite/plugin")],
 };

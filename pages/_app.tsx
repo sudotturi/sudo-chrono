@@ -8,6 +8,7 @@ import * as gtag from "../lib/gtag";
 import Script from "next/script";
 import { SessionProvider, useSession } from "next-auth/react";
 import { AppPropsWithLayout } from "@/utils/constants";
+import Layout from "@/components/layouts/mainLayout";
 
 export default function App({
   Component,
@@ -26,7 +27,7 @@ export default function App({
     };
   }, [router.events]);
   
-  const getLayout = Component.getLayout ?? ((page) => page);
+  const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
 
   return (
     <>
