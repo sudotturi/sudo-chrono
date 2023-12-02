@@ -53,6 +53,14 @@ model RoleModules {
   order Int
 }
 
+model Project {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
+  description          String
+  access         String
+  archive     Boolean  @default(false)
+}
+
 model Address {
   id           String @id @default(auto()) @map("_id") @db.ObjectId
   streetAddress String

@@ -215,54 +215,6 @@ export default function Team({ feed }) {
     setAddUserModelOpen(true);
   }
 
-  const edit = <>
-    <>
-
-      <div
-        id="dropdownDotsHorizontal"
-        className="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
-      >
-        <ul
-          className="py-2 text-sm text-gray-700 dark:text-gray-200"
-          aria-labelledby="dropdownMenuIconHorizontalButton"
-        >
-          <li>
-            <a
-              href="#"
-              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-            >
-              Dashboard
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-            >
-              Settings
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-            >
-              Earnings
-            </a>
-          </li>
-        </ul>
-        <div className="py-2">
-          <a
-            href="#"
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-          >
-            Separated link
-          </a>
-        </div>
-      </div>
-    </>
-  </>
-
   useEffect(() => {
     if (!isAddUserModelOpen) {
     }
@@ -310,10 +262,7 @@ export default function Team({ feed }) {
               <TableCell>{user.roles}</TableCell>
               <TableCell>{user.isActive ? <CheckCircleIcon className="h-5 w-5 text-green-500" /> : <XCircleIcon className="h-5 w-5 text-red-500" />}</TableCell>
               <TableCell>{!user.isLocked ? <LockOpenIcon className="h-5 w-5 text-green-500" /> : <LockClosedIcon className="h-5 w-5 text-red-500" />}</TableCell>
-              {user.roles == ROLES.SUPER_ADMIN ? (<> <TableCell>
-
-              </TableCell>
-              </>) : (<> <TableCell>
+              <TableCell>
                 <button onClick={() => editUser(ind)} className="p-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500">
                   <PencilSquareIcon className="h-5 w-5 text-gray-500" />
                 </button>
@@ -321,8 +270,6 @@ export default function Team({ feed }) {
                   <TrashIcon className="h-5 w-5 text-red-500" />
                 </button>
               </TableCell>
-              </>)}
-
             </TableRow>
           })}
 

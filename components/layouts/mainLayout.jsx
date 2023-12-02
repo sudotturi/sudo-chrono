@@ -309,8 +309,8 @@ export default function Layout({ children }) {
         </div>
       </aside>
       {isMenuOpen && <div onClick={() => setMenuOpen(false)} className="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30" />}
-      <div className="p-4 sm:ml-64">
-        <div className="p-4  rounded-lg mt-14">
+      <div className="p-2 sm:ml-64 mt-16">
+        <div className="rounded">
           {children}
         </div>
       </div>
