@@ -5,17 +5,17 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Loading from "../loading";
 import { modulesMap } from "@/utils/constants";
-import { ArrowRightOnRectangleIcon, ChartPieIcon, ClipboardDocumentIcon, ClockIcon, MoonIcon, SunIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { ArrowRightOnRectangleIcon, ChartPieIcon, ClipboardDocumentIcon, ClockIcon, MoonIcon, SunIcon, UserGroupIcon, UserIcon } from '@heroicons/react/24/outline'
 import { useTheme } from "next-themes";
 import { MODULES } from "@prisma/client";
 import Link from "next/link";
+import { Badge } from "flowbite-react";
 
 export default function Layout({ children }) {
 
   const [isProfileCardOpen, setProfileCardOpen] = useState(false);
-
+  const [isMenuOpen, setMenuOpen] = useState(false);
   const handleProfileDropdown = () => {
-    console.log(isProfileCardOpen)
     setProfileCardOpen(!isProfileCardOpen);
   }
 
@@ -26,6 +26,7 @@ export default function Layout({ children }) {
   const { systemTheme, theme, setTheme } = useTheme();
   const [checked, setChecked] = useState(false);
   useEffect(() => {
+    setMenuOpen(false);
     if (status == 'unauthenticated') {
       route.push('/auth/signin')
     } else if (status == 'authenticated') {
@@ -51,9 +52,7 @@ export default function Layout({ children }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
               <button
-                data-drawer-target="logo-sidebar"
-                data-drawer-toggle="logo-sidebar"
-                aria-controls="logo-sidebar"
+                onClick={() => setMenuOpen(!isMenuOpen)}
                 type="button"
                 className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
               >
@@ -84,17 +83,13 @@ export default function Layout({ children }) {
                 <div>
                   <button
                     type="button"
-                    className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                    className="flex text-sm rounded-full"
                     aria-expanded="false"
                     onClick={() => handleProfileDropdown()}
                     data-dropdown-toggle="dropdown-user"
                   >
                     <span className="sr-only">Open user menu</span>
-                    <Image
-                      className="w-8 h-8 rounded-full"
-                      src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                      alt="user photo"
-                    />
+                    <UserIcon className="h-7 w-7 text-gray-500" />
                   </button>
                 </div>
                 <div>
@@ -111,52 +106,55 @@ export default function Layout({ children }) {
                 {isProfileCardOpen && <div
                   className="z-50 my-4 text-base right-3 top-10  absolute list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 block"
                   id="dropdown-user"
-                // style={{
-                //   position: "absolute",
-                //   inset: "0px 10px auto auto",
-                //   margin: 0,
-                //   transform: "translate(0px, 54px)"
-                // }}
-                // data-popper-placement="bottom"
                 >
                   <div className="px-4 py-3" role="none">
                     <p className="text-sm text-gray-900 dark:text-white" role="none">
-                      Neil Sims
+                      {data.user?.username}
                     </p>
                     <p
                       className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
                       role="none"
                     >
-                      neil.sims@flowbite.com
+                      {data.user?.email}
                     </p>
                   </div>
                   <ul className="py-1" role="none">
                     <li>
+                      <a
+                        href=""
+                        disabled
+                        aria-disabled="true"
+                        className=" pointer-events-none block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        role="menuitem"
+                      >
+                        <div className="flex flex-wrap gap-2">
+                          Profile
+                          <Badge color="info">Coming soon</Badge>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href=""
+                        disabled
+                        aria-disabled="true"
+                        className=" pointer-events-none block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        role="menuitem"
+                      >
+                        <div className="flex flex-wrap gap-2">
+                          Notifications
+                          <Badge color="info">Coming soon</Badge>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
                       <Link
-                        href="#"
+                        href="/dashboard"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                         role="menuitem"
                       >
                         Dashboard
                       </Link>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                        role="menuitem"
-                      >
-                        Settings
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                        role="menuitem"
-                      >
-                        Earnings
-                      </a>
                     </li>
                     <li>
                       <Link
@@ -177,7 +175,8 @@ export default function Layout({ children }) {
       </nav>
       <aside
         id="logo-sidebar"
-        className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+        className={isMenuOpen ? "fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700 transform-none" : "fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"}
+        role="dialog"
         aria-label="Sidebar"
       >
         <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
@@ -309,6 +308,7 @@ export default function Layout({ children }) {
           </ul>
         </div>
       </aside>
+      {isMenuOpen && <div onClick={() => setMenuOpen(false)} className="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30" />}
       <div className="p-4 sm:ml-64">
         <div className="p-4  rounded-lg mt-14">
           {children}

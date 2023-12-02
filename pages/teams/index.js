@@ -351,8 +351,7 @@ export const getStaticProps = async () => {
     },
   });
   return {
-    props: { feed },
-    revalidate: 10,
+    props: { feed }
   };
 };
 

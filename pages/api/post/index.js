@@ -16,7 +16,7 @@ export default async function handle(req, res) {
             res.json(users);
         } else
             if (req.method === 'POST') {
-                const { email, phoneNumber, username, fullName, gender, roles } = req.body;
+                const { email, phoneNumber, username, fullName, gender, roles, isActive, isLocked } = req.body;
                 if (roles != ROLES.SUPER_ADMIN) {
                     const upsertUser = await prisma.user.upsert({
                         where: {
@@ -29,7 +29,8 @@ export default async function handle(req, res) {
                             passwordHash: '$2a$12$rq6BZ0NNJTcg9Ma.WuTxa.JYgtUYZUg5Ex0NcIkpzpc7n/KL1OPXu', // test
                             fullName,
                             gender,
-                            roles
+                            roles,
+                            isActive, isLocked
                         },
                         create: {
                             email,
@@ -38,7 +39,8 @@ export default async function handle(req, res) {
                             passwordHash: '$2a$12$rq6BZ0NNJTcg9Ma.WuTxa.JYgtUYZUg5Ex0NcIkpzpc7n/KL1OPXu', // test
                             fullName,
                             gender,
-                            roles
+                            roles,
+                            isActive, isLocked
                         },
                     })
                     res.json(upsertUser);
