@@ -29,21 +29,22 @@ export default function Home({ projects }) {
 
   const deadline = Date.now();
 
-  const getTime = () => {
-    const time = Date.now() - deadline;
-    setTotalSeconds(getSecondsFromPrevTime(deadline));
-    setHours(Math.floor((time / (1000 * 60 * 60)) % 24));
-    setMinutes(Math.floor((time / 1000 / 60) % 60));
-    setSeconds(Math.floor((time / 1000) % 60));
-  };
+  
 
   useEffect(() => {
+    const getTime = () => {
+      const time = Date.now() - deadline;
+      setTotalSeconds(getSecondsFromPrevTime(deadline));
+      setHours(Math.floor((time / (1000 * 60 * 60)) % 24));
+      setMinutes(Math.floor((time / 1000 / 60) % 60));
+      setSeconds(Math.floor((time / 1000) % 60));
+    };
     if (timer) {
       const interval = setInterval(() => getTime(deadline), 1000);
 
       return () => clearInterval(interval);
     }
-  }, [timer]);
+  }, [timer, deadline]);
 
 
   function triggerTimer() {
@@ -86,8 +87,8 @@ export default function Home({ projects }) {
           </div>
           <div className="block border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg">
             <Dropdown id='project' renderTrigger={() => <span className="flex flex-wrap items-center hover:text-blue-500">{project ? project : <><PlusCircleIcon className="h-5 w-5 mr-1" />Project </>}</span>}>
-              {projects && projects?.map((proj) => {
-                return (<Dropdown.Item onClick={() => setProject(proj.name)}> {proj.name}</Dropdown.Item>)
+              {projects && projects?.map((proj, ind) => {
+                return (<Dropdown.Item key={ind} onClick={() => setProject(proj.name)}> {proj.name}</Dropdown.Item>)
               })}
             </Dropdown>
           </div>
