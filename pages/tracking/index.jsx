@@ -1,43 +1,126 @@
 import { UnderConstruction } from "@/components/layouts/underConstruction";
-import { PlusIcon } from "@heroicons/react/24/outline";
-import { Button, Dropdown, Label, TextInput } from "flowbite-react";
-import { useState } from "react";
+import prisma from "@/lib/prisma";
+import { ClockIcon, InformationCircleIcon, ListBulletIcon, PlusCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
+import clsx from "clsx";
+import { Alert, Button, Dropdown, Label, TextInput, Datepicker } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { useStopwatch } from "react-timer-hook";
 
-export default function Home({ }) {
+export default function Home({ projects }) {
   const [project, setProject] = useState('')
-  function onChangeIt(it) {
-    console.log(it)
+  const [type, setType] = useState('clock')
+  const [timer, setTimer] = useState(false);
+  const [task, setTask] = useState('');
+  const [error, setError] = useState('');
+  const [totalSeconds, setTotalSeconds] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+
+  function getSecondsFromPrevTime(prevTime, shouldRound) {
+    const now = new Date().getTime();
+    const milliSecondsDistance = now - prevTime;
+    if (milliSecondsDistance > 0) {
+      const val = milliSecondsDistance / 1000;
+      return Math.round(val);
+    }
+    return 0;
   }
+
+  const deadline = Date.now();
+
+  const getTime = () => {
+    const time = Date.now() - deadline;
+    setTotalSeconds(getSecondsFromPrevTime(deadline));
+    setHours(Math.floor((time / (1000 * 60 * 60)) % 24));
+    setMinutes(Math.floor((time / 1000 / 60) % 60));
+    setSeconds(Math.floor((time / 1000) % 60));
+  };
+
+  useEffect(() => {
+    if (timer) {
+      const interval = setInterval(() => getTime(deadline), 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [timer]);
+
+
+  function triggerTimer() {
+    if (!task) {
+      setError('Description is empty ')
+    } else {
+      if (timer) {
+        setProject('');
+        setTask('');
+        setSeconds(0);
+        setMinutes(0);
+        setHours(0);
+      }
+      setTimer(!timer);
+    }
+  }
+
   const TableHeaderSection = <section>
     <div>
+      {error &&
+        <Alert color="failure" icon={InformationCircleIcon} onDismiss={() => setError('')}>
+          <span className="font-medium"></span> {error}.
+        </Alert>
+      }
       <div className="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-        <div className="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-          <div className="w-full  md:w-1/2">
-            <form className="flex items-center">
-              <label htmlFor="simple-search" className="sr-only">
-                Search
-              </label>
-              <div className="relative w-full">
-                <TextInput
-                  type="text"
-                  id="task"
-                  placeholder="What are you working on?"
-                />
-              </div>
-            </form>
+        <div className="p-2 flex flex-wrap items-center gap-2 justify-end">
+          <div className="flex-grow">
+            <label htmlFor="task" className="sr-only">
+              Search
+            </label>
+            <div className="relative w-full">
+              <TextInput
+                type="text"
+                id="task"
+                placeholder="What are you working on?"
+                onChange={(event) => { setTask(event.target.value); setError('') }}
+                value={task}
+              />
+            </div>
           </div>
-          <div className="flex flex-wrap p-3">
-            <div className="p-2 flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
-              <Dropdown label="" renderTrigger={() => <span className="flex flex-wrap items-center hover:text-blue-500">{project ? project : <><PlusIcon className="h-3.5 w-3.5 mr-2" />Project </>}</span>}>
-                <Dropdown.Item onClick={() => setProject('Project 1')}> Project 1</Dropdown.Item>
-                <Dropdown.Item onClick={() => setProject('Project 2')}>Project 2</Dropdown.Item>
-              </Dropdown>
+          <div className="block border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg">
+            <Dropdown id='project' renderTrigger={() => <span className="flex flex-wrap items-center hover:text-blue-500">{project ? project : <><PlusCircleIcon className="h-5 w-5 mr-1" />Project </>}</span>}>
+              {projects && projects?.map((proj) => {
+                return (<Dropdown.Item onClick={() => setProject(proj.name)}> {proj.name}</Dropdown.Item>)
+              })}
+            </Dropdown>
+          </div>
+          {type && type == 'list' && <><Datepicker /><div className="flex flex-row space-x-2 items-center">
+            <div>
+              <label for="fromTime" ></label>
+              <TextInput type="time" id="fromTime" name="fromTime" />
             </div>
-            <div className="p-2 flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
-              <Label>00:00:00</Label>
+            <span>-</span>
+            <div>
+              <label for="toTime" ></label>
+              <TextInput type="time" id="toTime" name="toTime" />
             </div>
-            <div className="p-2 flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
-              <Button>Start</Button>
+          </div></>}
+          {type && type == 'clock' &&
+            <div className="p-2 block border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg">
+              <Label>
+                <span>{String(hours).padStart(2, "0")}</span>:
+                <span>{String(minutes).padStart(2, "0")}</span>:
+                <span>{String(seconds).padStart(2, "0")}</span></Label>
+            </div>
+          }
+          {type && type == 'list' ? <div >
+            <Button onClick={() => triggerTimer()}>ADD</Button>
+          </div> :
+            <div className="">
+              <Button onClick={() => triggerTimer()}>{timer ? 'Stop' : 'Start'}</Button>
+            </div>
+          }
+          <div className="">
+            <div class="flex flex-col">
+              <button onClick={() => setType('clock')} ><ClockIcon className={clsx('h-5 w-5', type == 'clock' ? 'text-cyan-700' : '')} /></button>
+              <button onClick={() => setType('list')}><ListBulletIcon className={clsx('h-5 w-5', type == 'list' ? 'text-cyan-700' : '')} /></button>
             </div>
           </div>
         </div>
@@ -51,3 +134,17 @@ export default function Home({ }) {
     </div>
   )
 }
+
+
+export const getStaticProps = async () => {
+  const projects = await prisma.project.findMany({
+    select: {
+      name: true,
+      description: true
+    }
+  });
+  return {
+    props: { projects }
+  };
+};
+
