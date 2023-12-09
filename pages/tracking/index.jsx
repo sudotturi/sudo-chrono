@@ -273,6 +273,9 @@ export default function Home() {
               <th scope="col" className="px-4 py-3">
                 Total Time
               </th>
+              <th scope="col" className="px-4 py-3">
+              
+              </th>
             </tr>
           </thead>
           <tbody>
