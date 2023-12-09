@@ -56,9 +56,6 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
             });
-            if (res.status == 200) {
-                console.log(res)
-            }
             setSaveLoading(false);
             if (isadd) {
                 const mer = data.concat([{

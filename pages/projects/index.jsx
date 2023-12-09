@@ -1,16 +1,18 @@
 import ProjectAction from "@/components/project/project";
-import { CheckCircleIcon, PencilSquareIcon, TrashIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
-import { SetStateAction, useEffect, useState } from "react";
+import AssignUser from "@/components/project/assign";
+import { CheckCircleIcon, PencilSquareIcon, TrashIcon, UserGroupIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
 
 export default function Project({ }) {
 
   const [data, setData] = useState([]);
   const [mode, setMode] = useState('add');
   const [ind, setInd] = useState(0);
-
+  const [projectId, setProjectId] = useState('656a1eb2dbe4290dd25a7bb4');
 
   const [isProjectModelOpen, setProjectModelOpen] = useState(false);
+
+  const [isAssigntModelOpen, setAssignModelOpen] = useState(false);
 
   function openAddUserModel() {
     setMode('add');
@@ -39,6 +41,11 @@ export default function Project({ }) {
     setProjectModelOpen(true);
   }
 
+  function assignUsers(projectId) {
+    setProjectId(projectId)
+    setAssignModelOpen(true);
+  }
+
   function deleteUser(ind) {
     setMode('delete');
     setInd(ind);
@@ -48,6 +55,7 @@ export default function Project({ }) {
   return (
     <div>
       <ProjectAction isProjectModelOpen={isProjectModelOpen} setProjectModelOpen={setProjectModelOpen} data={data} mode={mode} setData={setData} ind={ind} />
+      <AssignUser isAssigntModelOpen={isAssigntModelOpen} setAssignModelOpen={setAssignModelOpen} projectId={projectId} />
       <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg border dark:border-gray-600">
         <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4 border-b dark:border-gray-600">
           <div className="flex items-center flex-1 space-x-4">
@@ -145,6 +153,10 @@ export default function Project({ }) {
                     <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {project.archive ? <CheckCircleIcon className="h-5 w-5 text-green-500" /> : <XCircleIcon className="h-5 w-5 text-red-500" />}
                     </td> <td className="px-4 py-2">
+                      {project.access && project.access == 'Private' && <button onClick={() => assignUsers(project.id)} className="p-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500">
+                        <UserGroupIcon className="h-5 w-5 text-gray-500" />
+                      </button>}
+                    
                       <button onClick={() => editUser(ind)} className="p-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500">
                         <PencilSquareIcon className="h-5 w-5 text-gray-500" />
                       </button>

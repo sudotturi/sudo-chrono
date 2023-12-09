@@ -11,9 +11,18 @@ export default async function handle(req, res) {
     const session = await getToken({ req });
     if (session) {
         if (req.method === 'GET') {
-            const users = await prisma.user.findMany({
-            });
-            res.json(users);
+            console.log(typeof req.query.withAssign)
+            if (req.query.withAssign && req.query.withAssign == 'true') {
+                const users = await prisma.user.findMany({
+                    include: {projectUser: true}
+                });
+                res.json(users);
+            }
+            else {
+                const users = await prisma.user.findMany({
+                });
+                res.json(users);
+            }
         } else
             if (req.method === 'POST') {
                 const { email, phoneNumber, username, fullName, gender, roles, isActive, isLocked } = req.body;
