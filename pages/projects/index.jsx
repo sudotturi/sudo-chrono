@@ -152,11 +152,11 @@ export default function Project({ }) {
                     </td>
                     <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {project.archive ? <CheckCircleIcon className="h-5 w-5 text-green-500" /> : <XCircleIcon className="h-5 w-5 text-red-500" />}
-                    </td> <td className="px-4 py-2">
-                      {project.access && project.access == 'Private' && <button onClick={() => assignUsers(project.id)} className="p-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500">
+                    </td>
+                    <td className="px-4 py-2 flex ">
+                      {project.access && project.access == 'Private' && project.archive == false && <button onClick={() => assignUsers(project.id)} className="p-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500">
                         <UserGroupIcon className="h-5 w-5 text-gray-500" />
                       </button>}
-                    
                       <button onClick={() => editUser(ind)} className="p-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500">
                         <PencilSquareIcon className="h-5 w-5 text-gray-500" />
                       </button>

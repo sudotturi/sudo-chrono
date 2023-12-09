@@ -21,7 +21,7 @@ export default function AssignUser({ isAssigntModelOpen, setAssignModelOpen, pro
     useEffect(() => {
         if (isAssigntModelOpen) {
             async function fetchData() {
-                const response = await fetch(`/api/post?withAssign=${true}`, {
+                const response = await fetch(`/api/assign?projectId=${projectId}`, {
                     method: "GET",
                     headers: { "Content-Type": "application/json" }
                 });
@@ -32,7 +32,7 @@ export default function AssignUser({ isAssigntModelOpen, setAssignModelOpen, pro
         } else {
             setData([])
         }
-    }, [isAssigntModelOpen])
+    }, [isAssigntModelOpen, projectId])
 
     const assignUser = async (userId, ind) => {
         try {
@@ -43,14 +43,17 @@ export default function AssignUser({ isAssigntModelOpen, setAssignModelOpen, pro
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
             });
-            const assingUserValue = await res.json()
-            onCloseModal();
+            let newData = [].concat(data)
+            const item = newData[ind];
+            item.projectAssigned = true
+            newData[ind] = item
+            setData(newData);
         } catch (error) {
             console.error(error);
         }
     };
 
-    const removeAssignUser = async (userId) => {
+    const removeAssignUser = async (userId, ind) => {
         try {
             setSaveLoading(true);
             const body = { userId, projectId };
@@ -59,7 +62,11 @@ export default function AssignUser({ isAssigntModelOpen, setAssignModelOpen, pro
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
             });
-            onCloseModal();
+            let newData = [].concat(data)
+            const item = newData[ind];
+            item.projectAssigned = false
+            newData[ind] = item
+            setData(newData);
         } catch (error) {
             console.error(error);
         }
@@ -69,29 +76,30 @@ export default function AssignUser({ isAssigntModelOpen, setAssignModelOpen, pro
         <>
             <Modal show={isAssigntModelOpen} onClose={() => onCloseModal()} size={"sm"}>
                 <Modal.Header>Contributors</Modal.Header>
-                <Modal.Body className='p-3'>
+                <Modal.Body className='px-4 p-3'>
                     <table className='w-full'>
                         <tbody className='w-full'>
                             {data && data.map((user, ind) => {
                                 return (
-                                    <tr className="flex justify-between items-center">
+                                    <tr key={ind} className="flex justify-between items-center border-b">
                                         <td
                                             scope="row"
-                                            className="flex items-center text-gray-900 whitespace-nowrap dark:text-white "
+                                            className="pl-2 py-2 flex items-center text-gray-900 whitespace-nowrap dark:text-white "
                                         >
-                                            <div class="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-                                                <svg class="absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                            <div className="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                                                <svg className="absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
                                             </div>
-                                            <div className="ps-3">
+                                            <div className="ps-2">
                                                 <div className="text-base font-semibold">{user.fullName}</div>
+                                                <div className="font-normal text-gray-500 text-wrap">{user.email}</div>
                                             </div>
                                         </td>
                                         <td>
 
-                                            {isProjectAssigned(user.projectUser, projectId) ?
-                                                <>   <Tooltip content="Remove"> <button onClick={() => removeAssignUser(user.id)} className="p-2 font-medium text-blue-600 hover:underline dark:text-cyan-500">
+                                            {user.projectAssigned ?
+                                                <>   <Tooltip content="Remove"> <button onClick={() => removeAssignUser(user.userId, ind)} className="p-2 font-medium text-blue-600 hover:underline dark:text-cyan-500">
                                                     <XMarkIcon className="h-7 w-7 text-red-500" />
-                                                </button></Tooltip></> : <Tooltip content="Assign"> <button onClick={() => assignUser(user.id, ind)} className="p-2 font-medium text-blue-600 hover:underline dark:text-cyan-500">
+                                                </button></Tooltip></> : <Tooltip content="Assign"> <button onClick={() => assignUser(user.userId, ind)} className="p-2 font-medium text-blue-600 hover:underline dark:text-cyan-500">
                                                     <PlusCircleIcon className="h-7 w-7 text-gray-500" />
                                                 </button></Tooltip>}
                                         </td>

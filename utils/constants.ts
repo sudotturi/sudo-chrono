@@ -75,8 +75,6 @@ export function getTotalTime(start:Date, end:Date) {
 }
 
 export function isProjectAssigned(projectUser:Array<any>, projectId: String) {
-  console.log(projectUser)
-  console.log(projectId)
   if(!projectUser){
     return false
   }

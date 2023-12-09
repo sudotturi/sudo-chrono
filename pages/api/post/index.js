@@ -11,7 +11,6 @@ export default async function handle(req, res) {
     const session = await getToken({ req });
     if (session) {
         if (req.method === 'GET') {
-            console.log(typeof req.query.withAssign)
             if (req.query.withAssign && req.query.withAssign == 'true') {
                 const users = await prisma.user.findMany({
                     include: {projectUser: true}
@@ -65,7 +64,6 @@ export default async function handle(req, res) {
                                 username,
                             }
                         });
-                        console.log(username)
                         res.json(result);
                     } else
                         res.status(401).send({ message: 'Unauthorized' })

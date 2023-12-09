@@ -7,7 +7,24 @@ export default async function handle(req, res) {
     if (session) {
         const { modules } = session;
         if (req.method === 'GET') {
+            if (req.query.forTrack && req.query.forTrack == 'true') {
+                const userId = session.id;
+                const projects = await prisma.project.findMany({
+                    where: {
+                        OR: [{
+                            projectUser: {
+                                some: {
+                                    userId
+                                }
+                            }
+                        }, { access: 'Public' }], deleted: false, archive: false
+                    }
+                });
+                res.json(projects);
+                return;
+            }
             const projects = await prisma.project.findMany({
+                where : {deleted:false}
             });
             res.json(projects);
         } else
@@ -42,10 +59,10 @@ export default async function handle(req, res) {
                 if (req.method === 'DELETE') {
                     const { name } = req.body;
                     if (modules.includes('PROJECTS')) {
-                        const result = await prisma.project.delete({
+                        const result = await prisma.project.update({
                             where: {
                                 name,
-                            }
+                            }, data: { deleted: true}
                         });
                         res.json(result);
                     } else

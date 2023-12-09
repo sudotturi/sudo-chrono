@@ -44,9 +44,6 @@ export default function ProjectAction({ isProjectModelOpen, setProjectModelOpen,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
             });
-            if (res.status == 200) {
-                console.log(res)
-            }
             setSaveLoading(false);
             if (isadd) {
                 const mer = data.concat([{
@@ -187,7 +184,7 @@ export default function ProjectAction({ isProjectModelOpen, setProjectModelOpen,
                                         htmlFor="bordered-checkbox-2"
                                         className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                     >
-                                        Locked
+                                        Archived
                                     </label>
                                 </div>
                             </>

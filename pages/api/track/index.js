@@ -39,6 +39,7 @@ export default async function handle(req, res) {
                             projectId,
                             userId
                         },
+                        include: { project: true }
                     })
                     res.json(tracking);
                 } else {
@@ -47,7 +48,6 @@ export default async function handle(req, res) {
             } else
                 if (req.method === 'DELETE') {
                     const { id } = req.body;
-                    console.log(id)
                     if (modules.includes('TRACKING')) {
                         const result = await prisma.track.delete({
                             where: {

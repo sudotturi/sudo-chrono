@@ -21,7 +21,7 @@ const roleModuleData: Prisma.RoleModulesCreateInput[] = [
   {
     module: MODULES.TRACKING,
     role: ROLES.ADMIN,
-    order: 2
+    order: 0
   },
   {
     module: MODULES.DASHBOARD,
@@ -31,7 +31,7 @@ const roleModuleData: Prisma.RoleModulesCreateInput[] = [
   {
     module: MODULES.TEAMS,
     role: ROLES.ADMIN,
-    order: 0
+    order: 2
   },
   {
     module: MODULES.PROJECTS,
@@ -40,7 +40,7 @@ const roleModuleData: Prisma.RoleModulesCreateInput[] = [
   }, {
     module: MODULES.TRACKING,
     role: ROLES.SUPER_ADMIN,
-    order: 2
+    order: 0
   },
   {
     module: MODULES.DASHBOARD,
@@ -50,7 +50,7 @@ const roleModuleData: Prisma.RoleModulesCreateInput[] = [
   {
     module: MODULES.TEAMS,
     role: ROLES.SUPER_ADMIN,
-    order: 0
+    order: 2
   },
   {
     module: MODULES.PROJECTS,
