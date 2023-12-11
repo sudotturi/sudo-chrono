@@ -1,9 +1,10 @@
 
 'use client';
 
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import { Gender, ROLES } from '@prisma/client';
-import { Button, Checkbox, Modal, Spinner, TextInput } from 'flowbite-react';
+import { Alert, Button, Checkbox, Modal, Spinner, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 
 export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data, setData, mode, ind }) {
@@ -11,12 +12,14 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
     const [email, setEmail] = useState('');
     const [fullName, setName] = useState("");
     const [username, setUserName] = useState("");
+    const [id, setId] = useState("6576de5c30db76e0b0b3701e");
     const [phoneNumber, setPhone] = useState("");
     const [roles, setRole] = useState(ROLES.USER.toString());
     const [gender, setGender] = useState(Gender.MALE.toString());
     const [saveLoading, setSaveLoading] = useState(false);
     const [isActive, setActive] = useState(true);
     const [isLocked, setLocked] = useState(false);
+    const [error, setError] = useState('');
     const isedit = mode == 'edit';
     const isadd = mode == 'add';
     const isdel = mode == 'delete';
@@ -31,11 +34,13 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
         setGender(Gender.MALE.toString());
         setAddUserModelOpen(false);
         setSaveLoading(false);
+        setError('');
     }
 
     useEffect(() => {
         if (isAddUserModelOpen && !isadd) {
             const us = data[ind];
+            setError('');
             setEmail(us.email);
             setUserName(us.username);
             setName(us.fullName);
@@ -44,18 +49,27 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
             setRole(us.roles);
             setActive(us.isActive);
             setLocked(us.isLocked);
+            setId(us.id);
         }
     }, [isAddUserModelOpen, data, ind, isadd])
 
     const submitData = async () => {
         try {
             setSaveLoading(true);
-            const body = { fullName, email, username, gender, roles, phoneNumber, isActive, isLocked };
+            setError('');
+            const body = { fullName, email, username, gender, id, roles, phoneNumber, isActive, isLocked };
             const res = await fetch(`/api/post`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
             });
+            if(res.status == 400){
+                const msg =  await res.json();
+                console.log(msg.message)
+                setError(msg.message);
+                setSaveLoading(false);
+                return;
+            }
             setSaveLoading(false);
             if (isadd) {
                 const mer = data.concat([{
@@ -107,6 +121,11 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
 
     if (isdel) {
         return (<Modal show={isAddUserModelOpen} size="md" onClose={() => onCloseModal()} popup>
+            {error &&
+        <Alert color="failure" icon={InformationCircleIcon} onDismiss={() => setError('')}>
+          <span className="font-medium"></span> {error}.
+        </Alert>
+      }
             <Modal.Header />
             <Modal.Body>
                 <div className="text-center">
@@ -132,7 +151,13 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
     return (
         <>
             <Modal show={isAddUserModelOpen} onClose={() => onCloseModal()}>
+          
                 <Modal.Header>{!isedit ? "Add New Member" : "Edit Member"}</Modal.Header>
+                {error &&
+        <Alert color="failure" icon={InformationCircleIcon} onDismiss={() => setError('')}>
+          <span className="font-medium"></span> {error}.
+        </Alert>
+      }
                 <Modal.Body>
                     <div className="space-y-6">
                         <div className="grid gap-4 mb-4 grid-cols-2">

@@ -24,11 +24,13 @@ export default async function handle(req, res) {
             }
         } else
             if (req.method === 'POST') {
-                const { email, phoneNumber, username, fullName, gender, roles, isActive, isLocked } = req.body;
+                const { email, phoneNumber, username, id, fullName, gender, roles, isActive, isLocked } = req.body;
+      
                 if (roles != ROLES.SUPER_ADMIN) {
+                  try {
                     const upsertUser = await prisma.user.upsert({
                         where: {
-                            username,
+                            id,
                         },
                         update: {
                             email,
@@ -50,8 +52,15 @@ export default async function handle(req, res) {
                             roles,
                             isActive, isLocked
                         },
-                    })
-                    res.json(upsertUser);
+                    });
+                    if(upsertUser)
+                      res.json(upsertUser);
+                    else {
+                        res.status(400).send({ message: "Username or email already exists. Please choose a different one."})
+                    }
+                  } catch (error) {
+                    res.status(400).send({ message: "Username or email already exists. Please choose a different one."})
+                  }
                 } else {
                     res.status(401).send({ message: 'Unauthorized' })
                 }
