@@ -1,6 +1,7 @@
 'use client' // if you use app dir, don't forget this line
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
+import { Label } from 'flowbite-react';
+import { Bar, Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -49,7 +50,7 @@ const colors = [ 'rgba(255, 99, 132, 0.2)',
 'rgba(255, 159, 64, 0.2)',];
 
 
-export default function ProjectHoursChart({data}){
+export  function ProjectHoursChart({data}){
     completeData.labels = Object.keys(data);
     const backgroundColor = []
     const borderColor = []
@@ -78,8 +79,7 @@ export default function ProjectHoursChart({data}){
       backgroundColor.push(pickNextColor());
       borderColor.push(pickNextBorderColor());
     })
-    console.log(borderColor)
-    completeData.datasets = [{data: Object.values(data), backgroundColor, borderColor}]
+    completeData.datasets = [{data: Object.values(data).map((item)=> {return item.tat}), backgroundColor, borderColor}]
     const options =  {
       plugins: {
         legend: {
@@ -93,4 +93,58 @@ export default function ProjectHoursChart({data}){
         </>
     )
     
+}
+
+
+
+export default function ProjectHoursBarChart({data}){
+  completeData.labels = Object.keys(data);
+  const backgroundColor = []
+  const borderColor = []
+  let currentIndex = 0;
+  let currentBorderIndex = 0;
+  function pickNextBorderColor() {
+    // Get the current color
+    const currentColor = borderCol[currentBorderIndex];
+  
+    // Increment the index for the next pick
+    currentBorderIndex = (currentBorderIndex + 1) % borderCol.length;
+  
+    return currentColor;
+  }
+  function pickNextColor() {
+    // Get the current color
+    const currentColor = colors[currentIndex];
+  
+    // Increment the index for the next pick
+    currentIndex = (currentIndex + 1) % colors.length;
+  
+    return currentColor;
+  }
+  
+  Object.values(data).map((item, ind)=> {
+    backgroundColor.push(pickNextColor());
+    borderColor.push(pickNextBorderColor());
+  })
+
+  completeData.datasets = [{data: Object.values(data), backgroundColor, borderColor}]
+  const options =  {
+    plugins: {
+      legend: {
+        position: 'right', // Set the legend position to 'right'
+      },
+    }
+}
+  return(
+      <>
+      <div className='w-full md:w-1/2'>
+      <Bar options={options} data={completeData}  />
+          <Label className=''>
+            Doughnut Chart
+          </Label>
+        </div>
+        
+      </>
+  )
+  
 }

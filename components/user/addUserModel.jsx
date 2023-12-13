@@ -65,7 +65,6 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
             });
             if(res.status == 400){
                 const msg =  await res.json();
-                console.log(msg.message)
                 setError(msg.message);
                 setSaveLoading(false);
                 return;

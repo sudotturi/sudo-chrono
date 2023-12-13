@@ -52,6 +52,18 @@ export function formatDateToCustomString(date: Date) {
   return `${dayOfWeek}, ${month} ${dayOfMonth}`;
 }
 
+export function getLastWeekDates() {
+  const today = new Date();
+  const dates = [];
+
+  for (let i = 6; i >= 0; i--) {
+    const previousDate = new Date(today);
+    previousDate.setDate(today.getDate() - i);
+    dates.push(formatDateToCustomString(previousDate));
+  }
+  return dates;
+}
+
 export function formatTimeToHHMM(date: Date) {
   const hours = date.getUTCHours().toString().padStart(2, '0');
   const minutes = date.getUTCMinutes().toString().padStart(2, '0');
@@ -79,4 +91,41 @@ export function isProjectAssigned(projectUser:Array<any>, projectId: String) {
     return false
   }
   return projectUser.map((i)=> i.projectId).includes(projectId);
+}
+
+
+export function getRandomColor() {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+export function getRandomHexColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+export function darkenColor(hex: String, factor: number) {
+  // Ensure the factor is between 0 and 1
+  factor = Math.min(1, Math.max(0, factor));
+
+  // Parse the hex color to RGB
+  let r = parseInt(hex.substring(1, 3), 16);
+  let g = parseInt(hex.substring(3, 5), 16);
+  let b = parseInt(hex.substring(5, 7), 16);
+
+  // Darken the color by applying the factor
+  r = Math.round(r * (1 - factor));
+  g = Math.round(g * (1 - factor));
+  b = Math.round(b * (1 - factor));
+
+  // Convert the new RGB values back to hex
+  const newHex = '#' + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
+
+  return newHex;
 }

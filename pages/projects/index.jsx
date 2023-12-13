@@ -2,6 +2,7 @@ import ProjectAction from "@/components/project/project";
 import AssignUser from "@/components/project/assign";
 import { CheckCircleIcon, PencilSquareIcon, TrashIcon, UserGroupIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
+import { Button } from "flowbite-react";
 
 export default function Project({ }) {
 
@@ -64,10 +65,10 @@ export default function Project({ }) {
             </h5>
           </div>
           <div className="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3">
-            <button
+            <Button
               type="button"
               onClick={() => setProjectModelOpen(true)}
-              className="uppercase flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+             
             >
               <svg
                 className="h-3.5 w-3.5 mr-2"
@@ -83,7 +84,7 @@ export default function Project({ }) {
                 />
               </svg>
               Add new project
-            </button>
+            </Button>
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -103,7 +104,7 @@ export default function Project({ }) {
                   </div>
                 </th>
                 <th scope="col" className="px-4 py-3">
-                  Project
+                 Project
                 </th>
                 <th scope="col" className="px-4 py-3">
                   Description
@@ -137,7 +138,7 @@ export default function Project({ }) {
                     </td>
                     <td className="px-4 py-2">
                       <span className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {project.name}
+                      <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span style={{background: project.color}} class="flex w-2.5 h-2.5 rounded-full me-1.5 flex-shrink-0"></span>  {project.name}</span>
                       </span>
                     </td>
                     <td className="px-4 py-2">

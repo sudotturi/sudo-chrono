@@ -1,4 +1,5 @@
 'use client' // if you use app dir, don't forget this line
+import { darkenColor } from '@/utils/constants';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Label } from 'flowbite-react';
 import { Doughnut, Pie } from 'react-chartjs-2';
@@ -52,35 +53,8 @@ const colors = ['rgba(255, 99, 132, 0.2)',
 
 export default function ProjectHoursChart({ data }) {
   completeData.labels = Object.keys(data);
-  const backgroundColor = []
-  const borderColor = []
-  let currentIndex = 0;
-  let currentBorderIndex = 0;
-  function pickNextBorderColor() {
-    // Get the current color
-    const currentColor = borderCol[currentBorderIndex];
-
-    // Increment the index for the next pick
-    currentBorderIndex = (currentBorderIndex + 1) % borderCol.length;
-
-    return currentColor;
-  }
-  function pickNextColor() {
-    // Get the current color
-    const currentColor = colors[currentIndex];
-
-    // Increment the index for the next pick
-    currentIndex = (currentIndex + 1) % colors.length;
-
-    return currentColor;
-  }
-
-  Object.values(data).map((item, ind) => {
-    backgroundColor.push(pickNextColor());
-    borderColor.push(pickNextBorderColor());
-  })
-  console.log(borderColor)
-  completeData.datasets = [{ data: Object.values(data), backgroundColor, borderColor }]
+  
+  completeData.datasets = [{ data: Object.values(data).map((item)=> {return item.tat}), backgroundColor: Object.values(data).map((item)=> {return item.backgroundColor}), borderColor: Object.values(data).map((item)=> {return item.borderColor}) }]
   const options = {
     plugins: {
 

@@ -32,7 +32,7 @@ export default async function handle(req, res) {
                 const { name,
                     access,
                     description,
-                    archive } = req.body;
+                    archive, color } = req.body;
                 if (modules.includes('PROJECTS')) {
                     const upsertUser = await prisma.project.upsert({
                         where: {
@@ -42,13 +42,15 @@ export default async function handle(req, res) {
                             name,
                             access,
                             description,
-                            archive
+                            archive,
+                            color
                         },
                         create: {
                             name,
                             access,
                             description,
-                            archive
+                            archive,
+                            color
                         },
                     })
                     res.json(upsertUser);

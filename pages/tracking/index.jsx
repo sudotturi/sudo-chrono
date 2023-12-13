@@ -1,4 +1,4 @@
-import { UnderConstruction } from "@/components/layouts/underConstruction";
+import LetGetStarted from "@/components/track/widget";
 import prisma from "@/lib/prisma";
 import { formatDateToCustomString, formatTimeToHHMM, getSecondsFromPrevTime, getTotalTime } from "@/utils/constants";
 import { ClockIcon, InformationCircleIcon, ListBulletIcon, PencilSquareIcon, PlusCircleIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
@@ -23,8 +23,6 @@ export default function Home() {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
-
-
 
   const [startDate, setStartDate] = useState(new Date());
   const [data, setData] = useState([]);
@@ -188,17 +186,17 @@ export default function Home() {
             </Dropdown>
           </div>
           {type && type == 'list' && <><Datepicker onSelectedDateChanged={(date) => { setDate(date) }} />
-          <div className="flex flex-row gap-1 items-center">
-            <div>
-              <label htmlFor="fromTime" ></label>
-              <TextInput type="time" id="fromTime" name="fromTime" value={from} onChange={(event) => setFrom(event.target.value)} />
-            </div>
-            <span>-</span>
-            <div>
-              <label htmlFor="toTime" ></label>
-              <TextInput type="time" id="toTime" name="toTime" value={to} onChange={(event) => setTo(event.target.value)} />
-            </div>
-          </div></>}
+            <div className="flex flex-row gap-1 items-center">
+              <div>
+                <label htmlFor="fromTime" ></label>
+                <TextInput type="time" id="fromTime" name="fromTime" value={from} onChange={(event) => setFrom(event.target.value)} />
+              </div>
+              <span>-</span>
+              <div>
+                <label htmlFor="toTime" ></label>
+                <TextInput type="time" id="toTime" name="toTime" value={to} onChange={(event) => setTo(event.target.value)} />
+              </div>
+            </div></>}
           {type && type == 'clock' &&
             <div className="p-2 block border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg">
               <Label>
@@ -208,125 +206,130 @@ export default function Home() {
             </div>
           }
           <div className="flex gap-2">
-          {type && type == 'list' ? <div >
-            <Button onClick={() => triggerTimer()}>ADD</Button>
-          </div> :
+            {type && type == 'list' ? <div >
+              <Button onClick={() => triggerTimer()}>ADD</Button>
+            </div> :
+              <div className="">
+                <Button onClick={() => triggerTimer()}>{timer ? 'Stop' : 'Start'}</Button>
+              </div>
+            }
             <div className="">
-              <Button onClick={() => triggerTimer()}>{timer ? 'Stop' : 'Start'}</Button>
+              <div className="flex flex-col">
+                <button onClick={() => setType('clock')} ><ClockIcon className={clsx('h-5 w-5', type == 'clock' ? 'text-cyan-700' : '')} /></button>
+                <button onClick={() => setType('list')}><ListBulletIcon className={clsx('h-5 w-5', type == 'list' ? 'text-cyan-700' : '')} /></button>
+              </div>
             </div>
-          }
-          <div className="">
-            <div className="flex flex-col">
-              <button onClick={() => setType('clock')} ><ClockIcon className={clsx('h-5 w-5', type == 'clock' ? 'text-cyan-700' : '')} /></button>
-              <button onClick={() => setType('list')}><ListBulletIcon className={clsx('h-5 w-5', type == 'list' ? 'text-cyan-700' : '')} /></button>
-            </div>
-          </div>
           </div>
         </div>
       </div>
     </div>
   </section >;
   return (
+    <div className="rounded-lg h-screen bg-white p-4 shadow dark:bg-gray-800 sm:p-6 xl:p-8 w-full">
 
-    <div>
       {TableHeaderSection}
-      <div className="mt-5 relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg border dark:border-gray-600">
-        <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4 border-b dark:border-gray-600">
-          <div className="flex items-center flex-1 space-x-4">
-            <h5>
-              <span className="text-gray-500 ">Tasks & Tracking</span>
-            </h5>
+
+      {(data && data.length) ? <div>
+        <div className="mt-5 relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg border dark:border-gray-600">
+          <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4 border-b dark:border-gray-600">
+            <div className="flex items-center flex-1 space-x-4">
+              <h5>
+                <span className="text-gray-500 ">Tasks & Tracking</span>
+              </h5>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-all"
-                    type="checkbox"
-                    className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label htmlFor="checkbox-all" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </th>
-              <th scope="col" className="px-4 py-3">
-                Date
-              </th>
-              <th scope="col" className="px-4 py-3">
-                Description
-              </th>
-              <th scope="col" className="px-4 py-3">
-                Project
-              </th>
-              <th scope="col" className="px-4 py-3">
-                Start Time
-              </th>
-              <th scope="col" className="px-4 py-3">
-                End Time
-              </th>
-              <th scope="col" className="px-4 py-3">
-                Total Time
-              </th>
-              <th scope="col" className="px-4 py-3">
-              
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((task, ind) => {
-              return (<tr key={ind} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                <td className="w-4 px-4 py-3">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="p-4">
                   <div className="flex items-center">
                     <input
-                      id="checkbox-table-search-1"
+                      id="checkbox-all"
                       type="checkbox"
                       className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     />
-                    <label htmlFor="checkbox-table-search-1" className="sr-only">
+                    <label htmlFor="checkbox-all" className="sr-only">
                       checkbox
                     </label>
                   </div>
-                </td>
-                <td className="px-4 py-2">
-                  <span className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {formatDateToCustomString(new Date(task.startDate))}
-                  </span>
-                </td>
-                <td className="px-4 py-2">
-                  <span className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {task.description}
-                  </span>
-                </td>
-                <td className="px-4 py-2">
-                  <span className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {task.project.name}
-                  </span>
-                </td>
-                <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {formatTimeToHHMM(new Date(task.startDate))}
-                </td>
-                <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {formatTimeToHHMM(new Date(task.endDate))}
-                </td>
-                <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {getTotalTime(new Date(task.endDate), new Date(task.startDate))}
-                </td>
-                <td className="px-4 py-2">
-                  <button onClick={() => deleteTrack(ind, task.id)} className="p-2 font-medium text-blue-600 hover:underline dark:text-cyan-500">
-                    <TrashIcon className="h-5 w-5 text-red-500" />
-                  </button>
-                </td>
-              </tr>)
-            })}
-          </tbody>
-        </table>
-      </div>
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Date
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Description
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Project
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Start Time
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  End Time
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Total Time
+                </th>
+                <th scope="col" className="px-4 py-3">
+
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((task, ind) => {
+                return (<tr key={ind} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <td className="w-4 px-4 py-3">
+                    <div className="flex items-center">
+                      <input
+                        id="checkbox-table-search-1"
+                        type="checkbox"
+                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      />
+                      <label htmlFor="checkbox-table-search-1" className="sr-only">
+                        checkbox
+                      </label>
+                    </div>
+                  </td>
+                  <td className="px-4 py-2">
+                    <span className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {formatDateToCustomString(new Date(task.startDate))}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2">
+                    <span className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {task.description}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2">
+                    <span className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {task.project.name}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {formatTimeToHHMM(new Date(task.startDate))}
+                  </td>
+                  <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {formatTimeToHHMM(new Date(task.endDate))}
+                  </td>
+                  <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {getTotalTime(new Date(task.endDate), new Date(task.startDate))}
+                  </td>
+                  <td className="px-4 py-2">
+                    <button onClick={() => deleteTrack(ind, task.id)} className="p-2 font-medium text-blue-600 hover:underline dark:text-cyan-500">
+                      <TrashIcon className="h-5 w-5 text-red-500" />
+                    </button>
+                  </td>
+                </tr>)
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div> : <>
+        <LetGetStarted />
+      </>}
     </div>
   )
 }

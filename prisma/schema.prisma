@@ -60,6 +60,7 @@ model Project {
   name String @unique
   description          String
   access         String
+  color         String @default("#000")
   archive     Boolean  @default(false)
   deleted Boolean  @default(false)
   track    Track[]
