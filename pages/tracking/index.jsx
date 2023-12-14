@@ -94,6 +94,7 @@ export default function Home() {
       body.startDate = new Date(currentDate + 'T' + fromDate.toTimeString().slice(0, 8));
       body.endDate = new Date(currentDate + 'T' + toDate.toTimeString().slice(0, 8));
     }
+    
     const res = await fetch(`/api/track`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

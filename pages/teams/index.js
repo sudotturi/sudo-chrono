@@ -280,9 +280,10 @@ export default function Team({ feed }) {
   )
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const feed = await prisma.user.findMany({
     select: {
+      id: true,
       email: true,
       username: true,
       fullName: true,

@@ -36,8 +36,7 @@ export default async function handle(req, res) {
                     thatProject['data'][index] =  Math.abs(Number((timeDifferenceMs / (1000 * 60 * 60)).toFixed(2)));
                     labels[rec.project.name] = thatProject;
                 })
-                
-                res.json(labels);
+                res.json({labels, track});
                 return;
             }
         } 

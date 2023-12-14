@@ -25,7 +25,7 @@ export default async function handle(req, res) {
         } else
             if (req.method === 'POST') {
                 const { email, phoneNumber, username, id, fullName, gender, roles, isActive, isLocked } = req.body;
-      
+                
                 if (roles != ROLES.SUPER_ADMIN) {
                   try {
                     const upsertUser = await prisma.user.upsert({
