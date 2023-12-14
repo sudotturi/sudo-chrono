@@ -5,6 +5,7 @@ import {  getRandomHexColor } from '@/utils/constants';
 import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import { Button, Checkbox, Modal, Spinner, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
+import { SmallSpiner } from '../widgets/loading';
 
 export default function ProjectAction({ isProjectModelOpen, setProjectModelOpen, data, setData, mode, ind }) {
 
@@ -120,7 +121,7 @@ export default function ProjectAction({ isProjectModelOpen, setProjectModelOpen,
         <>
             <Modal show={isProjectModelOpen} onClose={() => onCloseModal()} size={"sm"}>
                 <Modal.Header>{!isedit ? "Add New Project" : "Edit Project"}</Modal.Header>
-                <Modal.Body>
+                <Modal.Body className="overflow-x-auto max-h-96">
                     <div className="space-y-3">
                         <div className="grid gap-4">
                             <div>
@@ -210,7 +211,7 @@ export default function ProjectAction({ isProjectModelOpen, setProjectModelOpen,
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    {saveLoading ? (<Button><Spinner className='w-4 mr-2' />Submitting...</Button>) : <Button onClick={(event) => submitData()} type='submit'>{isedit ? "Edit User" : "Add User"}</Button>}
+                    {saveLoading ? (<Button><SmallSpiner loadingText={"Submitting..."}/></Button>) : <Button onClick={(event) => submitData()} type='submit'>{isedit ? "Edit User" : "Add User"}</Button>}
                     <Button color="gray" onClick={() => onCloseModal()}>
                         Cancel
                     </Button>

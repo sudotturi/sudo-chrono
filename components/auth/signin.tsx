@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import SFBLACKFINAL from "@/public/SFBLACKFINAL.svg";
+import { SmallSpiner } from "../widgets/loading";
 export const LoginForm = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -30,11 +31,11 @@ export const LoginForm = () => {
         callbackUrl,
       });
 
-      setLoading(false);
 
       if (!res?.error) {
         router.push(callbackUrl);
       } else {
+        setLoading(false);
         setError("invalid email or password");
       }
     } catch (error: any) {
@@ -67,7 +68,7 @@ export const LoginForm = () => {
             </h1>
             <form onSubmit={onSubmit} className="space-y-4 md:space-y-6">
               {error && (
-                <p className="text-center bg-red-500 py-1 mb-6 rounded">
+                <p className="text-center bg-red-300 py-1 mb-6 rounded">
                   {error}
                 </p>
               )}
@@ -129,10 +130,10 @@ export const LoginForm = () => {
 
               <button
                 type="submit"
-                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                className="w-full text-white bg-primary-600 relative hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 disabled={loading}
               >
-                {loading ? "loading..." : "Sign In"}
+                {loading?<SmallSpiner  loadingText="Submitting..." />:<span>Sign In</span>}
               </button>
             </form>
           </div>

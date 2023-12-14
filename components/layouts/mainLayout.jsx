@@ -3,7 +3,7 @@ import SFBLACKFINAL from "@/public/SFBLACKFINAL.svg";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Loading from "../loading";
+import Loading from "@/components/widgets/loading"
 import { modulesMap } from "@/utils/constants";
 import { ArrowRightOnRectangleIcon, ChartPieIcon, ClipboardDocumentIcon, ClockIcon, MoonIcon, SunIcon, UserGroupIcon, UserIcon } from '@heroicons/react/24/outline'
 import { useTheme } from "next-themes";
@@ -35,7 +35,7 @@ export default function Layout({ children }) {
   }, [status, route]);
 
   if (loading)
-    return (<Loading />
+    return (<Loading/>
     )
   const themeChange = () => {
     if (theme != 'dark') {

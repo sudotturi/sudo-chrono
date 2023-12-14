@@ -4,7 +4,7 @@ import { CheckCircleIcon, PencilSquareIcon, TrashIcon, UserGroupIcon, XCircleIco
 import { useEffect, useState } from "react";
 import { Button } from "flowbite-react";
 
-export default function Project({ }) {
+export default function Project({ setLoading}) {
 
   const [data, setData] = useState([]);
   const [mode, setMode] = useState('add');
@@ -33,9 +33,10 @@ export default function Project({ }) {
       });
       const json = await response.json();
       setData(json);
+      setLoading(false);
     }
     fetchData();
-  }, [])
+  }, [setLoading])
   function editUser(ind) {
     setMode('edit');
     setInd(ind);

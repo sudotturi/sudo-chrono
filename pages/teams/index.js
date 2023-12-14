@@ -2,13 +2,18 @@
 import AddUser from "@/components/user/addUserModel";
 import prisma from "@/lib/prisma";
 import { CheckCircleIcon, LockClosedIcon, LockOpenIcon, PencilSquareIcon, PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { ROLES } from "@prisma/client";
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 'flowbite-react';
 import { useEffect, useState } from "react";
 
 
-export default function Team({ feed }) {
+export default function Team({ feed, setLoading }) {
 
+  
+  useEffect(()=>{
+    if(feed){
+      setLoading(false)
+    }
+  },[feed, setLoading])
 
   const [data, setData] = useState(feed);
   const [mode, setMode] = useState('add');
@@ -150,7 +155,6 @@ export default function Team({ feed }) {
                     <input
                       id="apple"
                       type="checkbox"
-                      defaultValue=""
                       className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
                     <label
                       htmlFor="apple"
@@ -280,9 +284,10 @@ export default function Team({ feed }) {
   )
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const feed = await prisma.user.findMany({
     select: {
+      id: true,
       email: true,
       username: true,
       fullName: true,

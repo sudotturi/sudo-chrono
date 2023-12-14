@@ -12,8 +12,8 @@ export default async function handle(req, res) {
                 const byTeam = req.query.team;
                 const where = byTeam == 'true'? {}: { userId };
                 const track = await prisma.track.findMany({
-                    where , include: { project: true }, orderBy:{
-                        startDate: 'asc'
+                    where , include: { project: true, user: { select: { fullName: true} }}, orderBy:{
+                        startDate: 'asc',
                     }
                 });
 
@@ -32,12 +32,11 @@ export default async function handle(req, res) {
                     let tat = Number(thatProject['tat']) + Number((timeDifferenceMs / (1000 * 60 * 60)).toFixed(2));
                     thatProject['tat'] = Math.abs(tat);
                     const index = dateData.indexOf(formatDateToCustomString(rec.startDate));
-                    if(index)
+                    if(index > -1)
                     thatProject['data'][index] =  Math.abs(Number((timeDifferenceMs / (1000 * 60 * 60)).toFixed(2)));
                     labels[rec.project.name] = thatProject;
                 })
-                
-                res.json(labels);
+                res.json({labels, track});
                 return;
             }
         } 
