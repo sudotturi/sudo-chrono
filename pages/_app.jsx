@@ -3,21 +3,24 @@ import "../styles/globals.css";
 import "../styles/sudofolks.css";
 import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as gtag from "../lib/gtag";
 import Script from "next/script";
 import { SessionProvider, useSession } from "next-auth/react";
 import { AppPropsWithLayout } from "@/utils/constants";
 import Layout from "@/components/layouts/mainLayout";
+import Loading from "@/components/widgets/loading";
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
-}: AppPropsWithLayout) {
+}) {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const handleRouteChange = (url: any) => {
+    const handleRouteChange = (url) => {
       gtag.pageview(url);
+      setLoading(true);
     };
     router.events.on("routeChangeComplete", handleRouteChange);
     router.events.on("hashChangeComplete", handleRouteChange);
@@ -52,7 +55,11 @@ export default function App({
       />
       <SessionProvider session={session}>
         <ThemeProvider attribute="class">
-          {getLayout(<Component {...pageProps} />)}
+          {getLayout(
+          loading?
+      <>  <Loading/> <Component setLoading={setLoading} {...pageProps} /></> :
+          <Component setLoading={setLoading} {...pageProps} />
+          )}
         </ThemeProvider>
       </SessionProvider>
     </>

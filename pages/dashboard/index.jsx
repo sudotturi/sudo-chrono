@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { formatDateToCustomString, formatTimeToHHMM, getTotalTime } from "@/utils/constants";
 
-export default function Home({ }) {
+export default function Home({setLoading }) {
   const [total, setTotal] = useState(0);
   const [project, setTotalProjects] = useState(0);
   const [data, setData] = useState({labels: {}, track: []});
@@ -35,6 +35,7 @@ export default function Home({ }) {
       setTotal(tat);
       console.log(json)
       setData(json);
+      setLoading(false);
     }
     fetchData();
   }, [teamFilter, teamFilterConstant])

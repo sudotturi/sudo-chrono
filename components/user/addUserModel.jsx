@@ -6,6 +6,7 @@ import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import { Gender, ROLES } from '@prisma/client';
 import { Alert, Button, Checkbox, Modal, Spinner, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
+import Loading, { SmallSpiner } from '../widgets/loading';
 
 export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data, setData, mode, ind }) {
 
@@ -302,7 +303,7 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    {saveLoading ? (<Button><Spinner className='w-4 mr-2' />Submitting...</Button>) : <Button onClick={(event) => submitData()} type='submit'>{isedit ? "Edit User" : "Add User"}</Button>}
+                    {!saveLoading ? (<Button><SmallSpiner/> Submitting...</Button>) : <Button onClick={(event) => submitData()} type='submit'>{isedit ? "Edit User" : "Add User"}</Button>}
                     <Button color="gray" onClick={() => onCloseModal()}>
                         Cancel
                     </Button>

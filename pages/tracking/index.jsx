@@ -1,14 +1,11 @@
 import LetGetStarted from "@/components/track/widget";
-import prisma from "@/lib/prisma";
-import { formatDateToCustomString, formatTimeToHHMM, getSecondsFromPrevTime, getTotalTime } from "@/utils/constants";
-import { ClockIcon, InformationCircleIcon, ListBulletIcon, PencilSquareIcon, PlusCircleIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { formatDateToCustomString, formatTimeToHHMM, getTotalTime } from "@/utils/constants";
+import { ClockIcon, InformationCircleIcon, ListBulletIcon, PlusCircleIcon, TrashIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { Alert, Button, Dropdown, Label, TextInput, Datepicker } from "flowbite-react";
-import { getSession } from "next-auth/react";
-import { useCallback, useEffect, useState } from "react";
-import { useStopwatch } from "react-timer-hook";
+import { useEffect, useState } from "react";
 
-export default function Home() {
+export default function Home({setLoading}) {
   const [project, setProject] = useState('');
   const [projectId, setProjectId] = useState('');
   const [id, setId] = useState('656b8e0fc4d3dc9f717c5df2');
@@ -19,7 +16,6 @@ export default function Home() {
   const [date, setDate] = useState(new Date());
   const [to, setTo] = useState('');
   const [error, setError] = useState('');
-  const [totalSeconds, setTotalSeconds] = useState(0);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
@@ -27,6 +23,7 @@ export default function Home() {
   const [startDate, setStartDate] = useState(new Date());
   const [data, setData] = useState([]);
   const [projects, setProjects] = useState([]);
+  
   useEffect(() => {
     async function fetchData() {
       const response = await fetch(`/api/track`, {
@@ -57,6 +54,7 @@ export default function Home() {
         }
       }
       setData(json.filter((item) => item.endDate));
+      setLoading(false)
     }
     fetchData();
   }, [])
@@ -94,7 +92,7 @@ export default function Home() {
       body.startDate = new Date(currentDate + 'T' + fromDate.toTimeString().slice(0, 8));
       body.endDate = new Date(currentDate + 'T' + toDate.toTimeString().slice(0, 8));
     }
-    
+
     const res = await fetch(`/api/track`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

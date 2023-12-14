@@ -7,8 +7,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 
 import { useEffect, useState } from "react";
 
 
-export default function Team({ feed }) {
+export default function Team({ feed, setLoading }) {
 
+  
+  useEffect(()=>{
+    if(feed){
+      setLoading(false)
+    }
+  },[feed])
 
   const [data, setData] = useState(feed);
   const [mode, setMode] = useState('add');
