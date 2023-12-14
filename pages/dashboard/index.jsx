@@ -79,7 +79,7 @@ export default function Home({ }) {
         <div className="grid  gap-4 grid-cols-2 p-3 divide-x dark:divide-black bg-gray-300 dark:bg-gray-700 border-b-2 dark:border-black">
           <div className=" "><h1>Team activities</h1></div>
         </div>
-        <div className="p-2">
+        <div className="p-2 overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -109,17 +109,11 @@ export default function Home({ }) {
             <tbody>
               {data?.track && data?.track.map((task, ind) => {
                 return (<tr key={ind} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <td className="w-4 px-4 py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                      />
-                      <label htmlFor="checkbox-table-search-1" className="sr-only">
-                        checkbox
-                      </label>
-                    </div>
+                 
+                 <td className="px-4 py-2">
+                    <span className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                     {task.user.fullName}
+                    </span>
                   </td>
                   <td className="px-4 py-2">
                     <span className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
