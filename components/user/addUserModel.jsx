@@ -6,11 +6,12 @@ import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import { Gender, ROLES } from '@prisma/client';
 import { Alert, Button, Checkbox, Modal, Spinner, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import Loading, { SmallSpiner } from '../widgets/loading';
-
+import  { SmallSpiner } from '../widgets/loading';
+import  { validateParams } from '@/utils/utils';
 export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data, setData, mode, ind }) {
 
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [fullName, setName] = useState("");
     const [username, setUserName] = useState("");
     const [id, setId] = useState("6576de5c30db76e0b0b3701e");
@@ -26,6 +27,7 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
     const isdel = mode == 'delete';
     function onCloseModal() {
         setEmail('');
+        setPassword('');
         setUserName('');
         setName('');
         setActive(true);
@@ -37,6 +39,9 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
         setSaveLoading(false);
         setError('');
     }
+    useEffect(() => {
+        setError('')
+    },[fullName, email, username, gender, roles, phoneNumber, password])
 
     useEffect(() => {
         if (isAddUserModelOpen && !isadd) {
@@ -56,9 +61,14 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
 
     const submitData = async () => {
         try {
+            const err = validateParams(fullName, email, username, gender, roles, phoneNumber, isedit?'test':password)
+            if(err){
+                setError(err);
+                return;
+            }
             setSaveLoading(true);
             setError('');
-            const body = { fullName, email, username, gender, id, roles, phoneNumber, isActive, isLocked };
+            const body = { fullName, email, username, gender, id, roles, phoneNumber, password, isActive, isLocked };
             const res = await fetch(`/api/post`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -106,13 +116,18 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
     const deleteUser = async () => {
         try {
             setSaveLoading(true);
-            const body = { username, roles };
+            const body = { username, roles, userId: id };
             const res = await fetch(`/api/post`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
             });
-            await res.json();
+            if (res.status == 400) {
+                const msg = await res.json();
+                setError(msg.message);
+                setSaveLoading(false);
+                return;
+            }
             setSaveLoading(false);
             data.splice(ind, 1);
             setData(data);
@@ -124,12 +139,13 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
 
     if (isdel) {
         return (<Modal show={isAddUserModelOpen} size="md" onClose={() => onCloseModal()} popup>
+            
+            <Modal.Header />
             {error &&
                 <Alert color="failure" icon={InformationCircleIcon} onDismiss={() => setError('')}>
                     <span className="font-medium"></span> {error}.
                 </Alert>
             }
-            <Modal.Header />
             <Modal.Body>
                 <div className="text-center">
                     <ExclamationCircleIcon className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
@@ -153,7 +169,7 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
 
     return (
         <>
-            <Modal show={isAddUserModelOpen} onClose={() => onCloseModal()} size="sm">
+            <Modal show={isAddUserModelOpen} onClose={() => onCloseModal()} size="md">
 
                 <Modal.Header>{!isedit ? "Add New Member" : "Edit Member"}</Modal.Header>
                 {error &&
@@ -162,7 +178,7 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
                     </Alert>
                 }
                 <Modal.Body className="overflow-x-auto max-h-96">
-                    <div className="space-y-6">
+                    <div className="space-y-2">
                         <div className="grid gap-4 mb-4 grid-cols-2">
                             <div className="col-span-2 sm:col-span-1">
                                 <label
@@ -268,45 +284,49 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
                                     <option value={ROLES.USER}>Team Member</option>
                                 </select>
                             </div>
-                            <>
-                                <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
-                                    <Checkbox
-                                      
-                                        id="bordered-checkbox-1"
-                                        checked={isActive}
-                                        onChange={(event) => (setActive(event.target.checked))}
-                                        name="bordered-checkbox"
-                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                    />
-                                    <label
-                                        htmlFor="bordered-checkbox-1"
-                                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                    >
-                                        Active
-                                    </label>
-                                </div>
-                                <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
-                                    <Checkbox
-                                        id="bordered-checkbox-2"
-                                        checked={isLocked}
-                                        name="bordered-checkbox"
-                                        onChange={(event) => (setLocked(event.target.checked))}
-                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                    />
-                                    <label
-                                        htmlFor="bordered-checkbox-2"
-                                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                    >
-                                        Locked
-                                    </label>
-                                </div>
-                            </>
+
 
                         </div>
+                        <>
+                            {isadd && <div >
+                                <label
+                                    htmlFor="password"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                    Password
+                                </label>
+                                <TextInput
+                                    name="password"
+                                    id="password"
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(event) => setPassword(event.target.value)}
+                                    required
+                                />
+                            </div>}
+                            <div className="m-1">
+                                <Checkbox
+
+                                    id="bordered-checkbox-1"
+                                    checked={isActive}
+                                    onChange={(event) => (setActive(event.target.checked))}
+                                    name="bordered-checkbox"
+                                    className="w-4 grow flex-grow h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                />
+                                <label
+                                    htmlFor="bordered-checkbox-1"
+                                    className="w-full py-4 flex-grow  ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                >
+                                    Active
+                                </label>
+                            </div>
+
+                        </>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    {saveLoading ? (<Button> <SmallSpiner loadingText={"Submitting..."}/> </Button>) : <Button onClick={(event) => submitData()} type='submit'>{isedit ? "Edit User" : "Add User"}</Button>}
+                    {saveLoading ? (<Button> <SmallSpiner loadingText={"Submitting..."} /> </Button>) : <Button onClick={(event) => submitData()} type='submit'>{isedit ? "Edit User" : "Add User"}</Button>}
                     <Button color="gray" onClick={() => onCloseModal()}>
                         Cancel
                     </Button>

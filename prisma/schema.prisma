@@ -39,6 +39,7 @@ model User {
   gender       Gender?
   phoneNumber  String?
   isActive  Boolean @default(true)
+  isFirst  Boolean @default(true)
   isLocked  Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -16,7 +16,7 @@ export const config = {
 export async function middleware(req) {
     const path = req.nextUrl.pathname
     const session = await getToken({ req });
-
+  
     if (!session && path !== "/auth/signin") {
         return NextResponse.redirect(new URL("/auth/signin", req.url));
     } else if (session && path == "/auth/signin") {
@@ -27,12 +27,16 @@ export async function middleware(req) {
         return NextResponse.redirect(new URL('/tracking', req.url))
     }
     if (session) {
-        const { modules } = session;
+        const { modules, first } = session;
+        if (first && path != "/auth/password") {
+            return NextResponse.redirect(new URL('/auth/password', req.url))
+        }
         if (modules && modules.length == 0) {
             return NextResponse.redirect(new URL('/api/auth/signout', req.url))
         }
-
-        if (!(modules && modules.includes(path.toUpperCase().replace("/", "")))) {
+     
+        if (!(modules && modules.includes(path.toUpperCase().replace("/", ""))) &&  path != "/auth/password") {
+            console.log(path != "/auth/password")
             return NextResponse.redirect(new URL('/tracking', req.url))
         }
     }
