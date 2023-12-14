@@ -1,14 +1,14 @@
 import { LoginForm } from "@/components/auth/signin";
-import { ReactElement } from "react";
 
-export default function SignIn() {
+export default function SignIn({setLoading}) {
+    setLoading(false);
     return (
         <LoginForm />
     )
 }
 
 
-SignIn.getLayout = function getLayout(page: ReactElement) {
+SignIn.getLayout = function getLayout(page) {
     return (
         <section className="bg-gray-50 dark:bg-gray-900">
             {page}

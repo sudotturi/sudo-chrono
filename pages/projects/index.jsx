@@ -36,7 +36,7 @@ export default function Project({ setLoading}) {
       setLoading(false);
     }
     fetchData();
-  }, [])
+  }, [setLoading])
   function editUser(ind) {
     setMode('edit');
     setInd(ind);

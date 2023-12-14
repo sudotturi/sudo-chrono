@@ -52,7 +52,7 @@
     "**/*.tsx",
     "lib/prisma.js",
     ".next/types/**/*.ts"
-, "lib/fetch.ts", "pages/teams/index.js", "components/table.tsx", "components/layouts/mainLayout.jsx", "components/user/addUserModel.jsx", "components/user/deleteModel.jsx", "middleware.js", "pages/api/post/index.js", "pages/tracking/index.jsx", "pages/projects/index.jsx", "pages/dashboard/index.jsx", "pages/_app.jsx"  ],
+, "lib/fetch.ts", "pages/teams/index.js", "components/table.tsx", "components/layouts/mainLayout.jsx", "components/user/addUserModel.jsx", "components/user/deleteModel.jsx", "middleware.js", "pages/api/post/index.js", "pages/tracking/index.jsx", "pages/projects/index.jsx", "pages/dashboard/index.jsx", "pages/_app.jsx", "pages/auth/signin.jsx"  ],
   "exclude": [
     "node_modules"
   ]

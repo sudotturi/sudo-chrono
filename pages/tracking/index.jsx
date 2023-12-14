@@ -57,7 +57,7 @@ export default function Home({setLoading}) {
       setLoading(false)
     }
     fetchData();
-  }, [])
+  }, [setLoading])
 
 
   useEffect(() => {
@@ -83,16 +83,15 @@ export default function Home({setLoading}) {
     };
     if (type == 'list') {
       var [hours, minutes] = from.split(':').map(Number);
-      var [toHours, toHours] = to.split(':').map(Number);
+      var [toHours, toMin] = to.split(':').map(Number);
       const fromDate = new Date(date.getTime());
       const toDate = new Date(date.getTime());;
-      toDate.setHours(toHours, toHours);
+      toDate.setHours(toHours, toMin);
       fromDate.setHours(hours, minutes);
       var currentDate = date.toISOString().slice(0, 10);
       body.startDate = new Date(currentDate + 'T' + fromDate.toTimeString().slice(0, 8));
       body.endDate = new Date(currentDate + 'T' + toDate.toTimeString().slice(0, 8));
     }
-
     const res = await fetch(`/api/track`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -150,6 +149,7 @@ export default function Home({setLoading}) {
         setStartDate(new Date());
         createTrack(null);
       }
+     if(!isList) 
       setTimer(!timer);
     }
   }
@@ -228,7 +228,8 @@ export default function Home({setLoading}) {
 
       {TableHeaderSection}
 
-      {(data && data.length) ? <div>
+      {(data && data.length) ? 
+      <div className="overflow-x-auto h-5/6">
         <div className="mt-5 relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg border dark:border-gray-600">
           <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4 border-b dark:border-gray-600">
             <div className="flex items-center flex-1 space-x-4">
@@ -238,7 +239,7 @@ export default function Home({setLoading}) {
             </div>
           </div>
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto overflow-hidden ">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>

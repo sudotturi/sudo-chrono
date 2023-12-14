@@ -8,7 +8,6 @@ export default function Home({setLoading }) {
   const [total, setTotal] = useState(0);
   const [project, setTotalProjects] = useState(0);
   const [data, setData] = useState({labels: {}, track: []});
-  const [userData, setUserData] = useState([]);
   const teamFilterConstant = useMemo(() => {
     return ['By Team', 'Only Me']
   },[]);
@@ -26,19 +25,20 @@ export default function Home({setLoading }) {
       });
       const json = await response.json();
       let tat = 0;
-      console.log(json)
+      if(!userData){
+        json.track = []
+      }
       Object.values(json.labels).map((item) => {
         tat += item.tat;
       })
       setTotalProjects(Object.keys(json.labels).length);
       tat = Math.round(tat);
       setTotal(tat);
-      console.log(json)
       setData(json);
       setLoading(false);
     }
     fetchData();
-  }, [teamFilter, teamFilterConstant])
+  }, [teamFilter, teamFilterConstant, session?.data?.user?.roles, setLoading])
 
   
   return (

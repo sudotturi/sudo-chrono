@@ -64,8 +64,8 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
             });
-            if(res.status == 400){
-                const msg =  await res.json();
+            if (res.status == 400) {
+                const msg = await res.json();
                 setError(msg.message);
                 setSaveLoading(false);
                 return;
@@ -73,6 +73,7 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
             setSaveLoading(false);
             if (isadd) {
                 const mer = data.concat([{
+                    id,
                     email,
                     username,
                     fullName,
@@ -85,6 +86,7 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
             } else if (isedit) {
                 let newData = [].concat(data)
                 newData[ind] = {
+                    id,
                     email,
                     username,
                     fullName,
@@ -105,11 +107,12 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
         try {
             setSaveLoading(true);
             const body = { username, roles };
-            await fetch(`/api/post`, {
+            const res = await fetch(`/api/post`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
             });
+            await res.json();
             setSaveLoading(false);
             data.splice(ind, 1);
             setData(data);
@@ -122,10 +125,10 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
     if (isdel) {
         return (<Modal show={isAddUserModelOpen} size="md" onClose={() => onCloseModal()} popup>
             {error &&
-        <Alert color="failure" icon={InformationCircleIcon} onDismiss={() => setError('')}>
-          <span className="font-medium"></span> {error}.
-        </Alert>
-      }
+                <Alert color="failure" icon={InformationCircleIcon} onDismiss={() => setError('')}>
+                    <span className="font-medium"></span> {error}.
+                </Alert>
+            }
             <Modal.Header />
             <Modal.Body>
                 <div className="text-center">
@@ -150,15 +153,15 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
 
     return (
         <>
-            <Modal show={isAddUserModelOpen} onClose={() => onCloseModal()}>
-          
+            <Modal show={isAddUserModelOpen} onClose={() => onCloseModal()} size="sm">
+
                 <Modal.Header>{!isedit ? "Add New Member" : "Edit Member"}</Modal.Header>
                 {error &&
-        <Alert color="failure" icon={InformationCircleIcon} onDismiss={() => setError('')}>
-          <span className="font-medium"></span> {error}.
-        </Alert>
-      }
-                <Modal.Body>
+                    <Alert color="failure" icon={InformationCircleIcon} onDismiss={() => setError('')}>
+                        <span className="font-medium"></span> {error}.
+                    </Alert>
+                }
+                <Modal.Body className="overflow-x-auto max-h-96">
                     <div className="space-y-6">
                         <div className="grid gap-4 mb-4 grid-cols-2">
                             <div className="col-span-2 sm:col-span-1">
@@ -268,7 +271,7 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
                             <>
                                 <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
                                     <Checkbox
-                                        defaultChecked
+                                      
                                         id="bordered-checkbox-1"
                                         checked={isActive}
                                         onChange={(event) => (setActive(event.target.checked))}
@@ -303,7 +306,7 @@ export default function AddUser({ isAddUserModelOpen, setAddUserModelOpen, data,
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    {!saveLoading ? (<Button><SmallSpiner/> Submitting...</Button>) : <Button onClick={(event) => submitData()} type='submit'>{isedit ? "Edit User" : "Add User"}</Button>}
+                    {saveLoading ? (<Button> <SmallSpiner loadingText={"Submitting..."}/> </Button>) : <Button onClick={(event) => submitData()} type='submit'>{isedit ? "Edit User" : "Add User"}</Button>}
                     <Button color="gray" onClick={() => onCloseModal()}>
                         Cancel
                     </Button>

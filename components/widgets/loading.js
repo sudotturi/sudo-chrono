@@ -7,9 +7,10 @@ export default function Loading() {
     )
 }
 
-export function SmallSpiner() {
+export function SmallSpiner({loadingText }) {
     return (
-            <div className="lds-ring">
-                <div></div><div></div><div></div><div></div></div>
+        <>
+            <span className='flex justify-center  gap-2 ml-4'><span className="relative"><span className='spinner' /> <span>{loadingText}</span> </span></span>
+        </>
     )
 }

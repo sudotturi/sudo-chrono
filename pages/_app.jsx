@@ -3,7 +3,7 @@ import "../styles/globals.css";
 import "../styles/sudofolks.css";
 import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as gtag from "../lib/gtag";
 import Script from "next/script";
 import { SessionProvider, useSession } from "next-auth/react";
@@ -16,7 +16,11 @@ export default function App({
   pageProps: { session, ...pageProps },
 }) {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoad] = useState(true);
+  const setLoading = useCallback((load) => {
+    setLoad(load);
+  }, []);
+
   useEffect(() => {
     const handleRouteChange = (url) => {
       gtag.pageview(url);
@@ -28,8 +32,8 @@ export default function App({
       router.events.off("routeChangeComplete", handleRouteChange);
       router.events.off("hashChangeComplete", handleRouteChange);
     };
-  }, [router.events]);
-  
+  }, [router.events, setLoading]);
+
   const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
 
   return (
@@ -56,9 +60,9 @@ export default function App({
       <SessionProvider session={session}>
         <ThemeProvider attribute="class">
           {getLayout(
-          loading?
-      <>  <Loading/> <Component setLoading={setLoading} {...pageProps} /></> :
-          <Component setLoading={setLoading} {...pageProps} />
+            loading ?
+              <>  <Loading /> <Component setLoading={setLoading} {...pageProps} /></> :
+              <Component setLoading={setLoading} {...pageProps} />
           )}
         </ThemeProvider>
       </SessionProvider>

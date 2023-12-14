@@ -76,7 +76,7 @@ export default function AssignUser({ isAssigntModelOpen, setAssignModelOpen, pro
         <>
             <Modal show={isAssigntModelOpen} onClose={() => onCloseModal()} size={"sm"}>
                 <Modal.Header>Contributors</Modal.Header>
-                <Modal.Body className='px-4 p-3'>
+                <Modal.Body className="px-4 p-3 overflow-x-auto max-h-96">
                     <table className='w-full'>
                         <tbody className='w-full'>
                             {data && data.map((user, ind) => {
